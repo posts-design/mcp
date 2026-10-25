@@ -1,0 +1,21 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "design.posts/mcp",
+  "title": "posts.design",
+  "description": "Find design references and video breakdowns for your next post. Free account: 100 credits a month.",
+  "version": "1.3.0",
+  "websiteUrl": "https://posts.design/mcp",
+  "icons": [
+    {
+      "src": "https://posts.design/site/logo-mark.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": ["any"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://posts.design/mcp"
+    }
+  ]
+}
