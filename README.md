@@ -1,9 +1,9 @@
 # posts.design MCP
 
 Connect your agent to [posts.design](https://posts.design) and get back directions, examples and
-breakdowns to nail your next post's design. posts.design is a hand-curated library of social posts
-brands actually published: launch videos, carousels, OG images and X headers, each linked to its
-original.
+breakdowns to nail your next post's design. posts.design is a hand-picked gallery of real social
+posts from top brands and their designers: launch videos, carousels, OG images and X headers, each
+linked to its original.
 
 - **Server URL:** `https://posts.design/mcp` (Streamable HTTP)
 - **Sign-in:** OAuth with your posts.design account, or a personal key from
