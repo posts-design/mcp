@@ -19,7 +19,9 @@ itself is hosted by posts.design and is not open source.
 
 You need a free [posts.design](https://posts.design/signup) account.
 
-**Claude** (claude.ai and the desktop app): Settings → Connectors → Add custom connector. Paste
+**Claude** (claude.ai and the desktop app): open
+[posts.design in Claude's Connectors Directory](https://claude.ai/directory/connectors/posts-design),
+click Connect, then sign in. Or add it yourself: Settings → Connectors → Add custom connector, paste
 `https://posts.design/mcp`, then sign in.
 
 **ChatGPT:** Plugins → Add custom MCP server with OAuth. Paste `https://posts.design/mcp`, then
