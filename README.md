@@ -73,10 +73,12 @@ Once connected, ask your agent to call `get_my_access` to confirm.
 | `get_saved_reference` | Get saved reference | Open one saved reference with all its assets | Free |
 | `get_saved_asset` | Get saved asset | Read one asset of a saved reference, with a preview image when one fits | Free |
 | `get_my_access` | My access and credits | Show what this connection may read and how many credits are left | Free |
+| `list_playbooks` | List launch playbooks | List the formats for a launch film, with when to use each and its runtime | Free |
 | `get_video_breakdown` | Video breakdown | How a video is directed: structure, hook, timed beats, type, colour, end card and what to borrow, each tied to a still | Pro |
 | `get_video_scenes` | Video scenes | Every scene of a video with its time range, stills and the beats over it | Pro |
 | `get_scene_frames` | Scene frames | Stills across one scene, as images in time order | Pro |
 | `get_scene_clip` | Scene clip | A short silent MP4 of one scene, as a link that expires in an hour | Pro |
+| `get_playbook` | Get launch playbook | One launch format in full: a beat sheet with timings, checks and real launches to study | Pro |
 
 On a free account the Pro tools reply with a link to Pro instead of answering, and use no credits.
 
