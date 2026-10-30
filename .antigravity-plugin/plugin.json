@@ -1,0 +1,21 @@
+{
+  "name": "posts-design",
+  "displayName": "posts.design",
+  "version": "1.0.0",
+  "description": "Connect your agent to posts.design and get back directions, examples and breakdowns to nail your next post's design, from real launch posts and X headers.",
+  "logo": "assets/logo.png",
+  "suggestedPrompts": [
+    "Find three launch post references and open the first one, with its original source.",
+    "List launch playbooks and help me choose one for a short founder demo.",
+    "Check my access, then show three of my saved references."
+  ],
+  "keywords": ["design", "inspiration", "social", "launch", "references", "mcp"],
+  "author": {
+    "name": "posts.design",
+    "url": "https://posts.design"
+  },
+  "homepage": "https://posts.design/mcp",
+  "repository": "https://github.com/posts-design/mcp",
+  "license": "MIT",
+  "mcpServers": "./mcp_config.json"
+}

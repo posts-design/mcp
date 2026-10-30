@@ -11,9 +11,9 @@ linked to its original.
 - **Cost:** 100 credits a month on a free account, 1,000 with [Pro](https://posts.design/pricing)
 - **About:** [posts.design/mcp](https://posts.design/mcp)
 
-This repository holds the server's documentation and its
-[MCP Registry](https://registry.modelcontextprotocol.io) listing (`design.posts/mcp`). The server
-itself is hosted by posts.design and is not open source.
+This repository holds the server's documentation, its
+[MCP Registry](https://registry.modelcontextprotocol.io) listing (`design.posts/mcp`) and its
+Antigravity plugin. The server itself is hosted by posts.design and is not open source.
 
 ## Set up
 
@@ -35,6 +35,14 @@ claude mcp add --transport http posts https://posts.design/mcp
 
 Then run `/mcp` and sign in. To use a personal key instead, add
 `--header "Authorization: Bearer <your-key>"`.
+
+**Antigravity:**
+
+```bash
+agy plugin install https://github.com/posts-design/mcp
+```
+
+Then sign in when Antigravity opens posts.design.
 
 **Codex** (`~/.codex/config.toml`):
 
@@ -99,5 +107,5 @@ stills from returned links never uses credits. Credits reset on the 1st of each 
 
 Open an [issue](https://github.com/posts-design/mcp/issues).
 
-Documentation in this repository is MIT licensed. The posts in the library belong to their
-creators.
+Documentation in this repository is MIT licensed; the posts.design name and logo are not. The posts
+in the library belong to their creators.
