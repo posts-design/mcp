@@ -96,6 +96,18 @@ On a free account the Pro tools reply with a link to Pro instead of answering, a
 item. Repeating a request, a failed request and `get_my_access` are free, and downloading media or
 stills from returned links never uses credits. Credits reset on the 1st of each month (UTC).
 
+## Prompts
+
+Three starter prompts walk your agent through a first task. In Claude, open **+** in the chat box and
+choose posts.design; in Claude Code they are `/mcp__posts__…` commands. Choosing one is free; the
+reads it makes use credits as usual.
+
+| Prompt | You give | You get |
+|---|---|---|
+| `launch_references` | Your product, and what you're launching | The closest launch posts and a direction for yours |
+| `competitor_audit` | A brand | Its launches: recurring patterns, what changed, what to borrow |
+| `launch_video_direction` | Your product, and a length | A beat-by-beat plan for a launch video, from real ones |
+
 ## What it can and can't do
 
 - Every tool is read-only. It can't post, edit, save or delete anything.
