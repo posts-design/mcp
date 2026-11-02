@@ -13,7 +13,7 @@ linked to its original.
 
 This repository holds the server's documentation, its
 [MCP Registry](https://registry.modelcontextprotocol.io) listing (`design.posts/mcp`) and its
-Antigravity plugin. The server itself is hosted by posts.design and is not open source.
+Antigravity and Cursor plugins. The server itself is hosted by posts.design and is not open source.
 
 ## Set up
 
@@ -52,7 +52,14 @@ url = "https://posts.design/mcp"
 http_headers = { Authorization = "Bearer <your-key>" }
 ```
 
-**Cursor** (`~/.cursor/mcp.json`), or use **Add to Cursor** in Settings → MCP:
+**Cursor:** paste this link into your browser to add posts.design, then sign in when Cursor opens
+posts.design:
+
+```text
+cursor://anysphere.cursor-deeplink/mcp/install?name=posts.design&config=eyJ1cmwiOiJodHRwczovL3Bvc3RzLmRlc2lnbi9tY3AifQ==
+```
+
+Or add it to `~/.cursor/mcp.json` with your personal key, or use **Add to Cursor** in Settings → MCP:
 
 ```json
 {

@@ -1,0 +1,14 @@
+{
+  "name": "posts-design",
+  "description": "Hand-picked real launch posts from 1,000+ brands, plus carousels, OG images and X headers, each linked to its original.",
+  "version": "1.0.0",
+  "author": {
+    "name": "posts.design",
+    "email": "max@posts.design"
+  },
+  "homepage": "https://posts.design/mcp",
+  "repository": "https://github.com/posts-design/mcp",
+  "license": "MIT",
+  "keywords": ["design", "inspiration", "social", "launch", "references", "mcp"],
+  "logo": "assets/logo.png"
+}
