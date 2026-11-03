@@ -2,8 +2,7 @@
 
 Connect your agent to [posts.design](https://posts.design) and get back directions, examples and
 breakdowns to nail your next post's design. posts.design is a hand-picked gallery of real social
-posts from top brands and their designers: launch videos, carousels, OG images and X headers, each
-linked to its original.
+posts from top brands and their designers: launch videos, carousels, OG images and X headers.
 
 - **Server URL:** `https://posts.design/mcp` (Streamable HTTP)
 - **Sign-in:** OAuth with your posts.design account, or a personal key from
@@ -120,7 +119,7 @@ reads it makes use credits as usual.
 - Every tool is read-only. It can't post, edit, save or delete anything.
 - It reads two things: the published library, and your own Saves. Sign-in asks for exactly those
   (`references:read`, `saved:read`).
-- Results link to the original post and credit its brand and creator.
+- Results credit each post's brand and creator.
 
 ## Help
 

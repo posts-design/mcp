@@ -1,7 +1,7 @@
 {
   "name": "posts-design",
-  "description": "Hand-picked real launch posts from 1,000+ brands, plus carousels, OG images and X headers, each linked to its original.",
-  "version": "1.0.0",
+  "description": "Hand-picked real launch posts from 1,000+ brands, plus carousels, OG images and X headers.",
+  "version": "1.0.1",
   "author": {
     "name": "posts.design",
     "email": "max@posts.design"
