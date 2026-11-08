@@ -88,6 +88,8 @@ Once connected, ask your agent to call `get_my_access` to confirm.
 | `search_saved_references` | Search saves | Search or list everything you've saved on posts.design | Free |
 | `get_saved_reference` | Get saved reference | Open one saved reference with all its assets | Free |
 | `get_saved_asset` | Get saved asset | Read one asset of a saved reference, with a preview image when one fits | Free |
+| `save_reference` | Save reference | Save a post, OG image or X header to your Saves, when you ask | Free |
+| `unsave_reference` | Remove from Saves | Remove one reference from your Saves, when you ask | Free |
 | `get_my_access` | My access and credits | Show what this connection may read and how many credits are left | Free |
 | `list_playbooks` | List launch playbooks | List the formats for a launch film, with when to use each and its runtime | Free |
 | `get_video_breakdown` | Video breakdown | How a video is directed: structure, hook, timed beats, type, colour, end card and what to borrow, each tied to a still | Pro |
@@ -116,9 +118,10 @@ reads it makes use credits as usual.
 
 ## What it can and can't do
 
-- Every tool is read-only. It can't post, edit, save or delete anything.
-- It reads two things: the published library, and your own Saves. Sign-in asks for exactly those
-  (`references:read`, `saved:read`).
+- It reads the published library and your own Saves, and changes your Saves only when you ask.
+  It can't post, publish or delete anything else. Sign-in asks for exactly that
+  (`references:read`, `saved:read`, `saved:write`).
+- Saving and removing are free, and each one is logged on your account.
 - Results credit each post's brand and creator.
 
 ## Help
