@@ -9,7 +9,7 @@
     "node": ">=20.9"
   },
   "files": [
-    "README.md", "LICENSE", "package.json", "breakdown.example.json", "example/preview.webp", "prep.mjs",
+    "README.md", "LICENSE", ".gitignore", "package.json", "breakdown.example.json", "example/preview.webp", "prep.mjs",
     "render.mjs", "excerpt.mjs", "lib/cli.mjs", "lib/draft.mjs", "lib/ease.mjs", "lib/encode.mjs",
     "lib/end-scene.mjs", "lib/excerpt.mjs", "lib/film.mjs", "lib/layout.mjs", "lib/marquee.mjs",
     "lib/media.mjs", "lib/spec.mjs", "lib/streak.mjs", "lib/svg.mjs", "lib/timeline.mjs", "lib/timing.mjs",

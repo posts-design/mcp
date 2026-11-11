@@ -25,10 +25,10 @@ export async function createBreakdown(spec, { base, cacheDir, decode = true, log
   // raw pixels go straight into the frame's composite, with no PNG encode and decode in between
   const videoAt = (t) => sharp(frameFile(t)).ensureAlpha().composite([{ input: mask, blend: "dest-in" }]).raw().toBuffer();
   // the filmstrip's thumbnails, made as the timeline needs them
-  const tl = timelineLayout(spec.lanes.length), thumbs = new Map(), thumbW = Math.round(tl.videoH * WINDOW.w / WINDOW.h);   // as timeline.mjs
+  const tl = timelineLayout(spec.lanes.length), thumbs = new Map();
   const thumbAt = async (tc) => {
     const f = frameFile(clamp(0, duration - 0.001, tc));
-    if (!thumbs.has(f)) thumbs.set(f, `data:image/jpeg;base64,${(await sharp(f).resize(thumbW, tl.videoH).jpeg({ quality: 86 }).toBuffer()).toString("base64")}`);
+    if (!thumbs.has(f)) thumbs.set(f, `data:image/jpeg;base64,${(await sharp(f).resize(tl.thumbW, tl.videoH).jpeg({ quality: 86 }).toBuffer()).toString("base64")}`);
     return thumbs.get(f);
   };
 
@@ -43,7 +43,8 @@ export async function createBreakdown(spec, { base, cacheDir, decode = true, log
 
   async function breakdownAt(t) {
     const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">`
-      + `<rect x="${WINDOW.x - 0.75}" y="${WINDOW.y - 0.75}" width="${WINDOW.w + 1.5}" height="${WINDOW.h + 1.5}" rx="${WINDOW.r + 0.75}" fill="none" stroke="${COLOR.line}" stroke-width="1.5"/>`
+      + `<rect x="${WINDOW.x - 0.75}" y="${WINDOW.y - 0.75}" width="${WINDOW.w + 1.5}" height="${WINDOW.h + 1.5}" `
+      + `rx="${WINDOW.r + 0.75}" fill="none" stroke="${COLOR.line}" stroke-width="1.5"/>`
       + (await timeline.svg(t)) + timeline.footer(t) + `</svg>`;
     return sharp({ create: { width: W, height: H, channels: 3, background: COLOR.ground } }).composite([
       { input: await videoAt(Math.min(t, duration - 0.001)), raw: { width: WINDOW.w, height: WINDOW.h, channels: 4 }, left: WINDOW.x, top: WINDOW.y },

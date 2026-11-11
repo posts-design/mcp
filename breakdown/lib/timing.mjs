@@ -3,14 +3,14 @@
 import { T, easeInOut, easeOut, mix } from "./ease.mjs";
 import { SCROLL } from "./layout.mjs";
 
-/** The pull-back to the whole post takes 1.5 s; the whole post then holds `hold` seconds (default 1.2). */
+/** The pull-back to the whole post takes 1.5 s; the whole post then holds `hold` seconds (the spec's default is HOLD). */
 export const PULL_BACK = 1.5;
 export const HOLD = 1.2;
-/** The series text reveal: each word rises a third of its size and fades in, 0.12 s after the one before. */
+/** The text reveal (closing line and act titles): each word rises a third of its size and fades in, 0.12 s after the one before. */
 export const WORD_REVEAL = { stagger: 0.12, rise: 0.33, length: 0.5, fade: 0.3 };
 
 /** When the timeline pulls back (pull.a → pull.b) and when the whole post streaks out into the end scene. */
-export function schedule({ pullBack, hold = HOLD }, duration) {
+export function schedule({ pullBack, hold }, duration) {
   const a = Math.min(duration, pullBack);
   return { pull: { a, b: a + PULL_BACK }, streakAt: a + PULL_BACK + hold };
 }

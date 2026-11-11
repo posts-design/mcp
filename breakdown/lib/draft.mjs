@@ -1,12 +1,12 @@
 // The first spec prep.mjs writes from its measurements: every shot, clip and act is there, timed, with a placeholder
 // name to replace by eye and ear. Pure, so what a draft contains is tested (test/draft.test.mjs).
 import { MAX_LANES } from "./layout.mjs";
-import { firstBarAt } from "./timing.mjs";
+import { HOLD, firstBarAt } from "./timing.mjs";
 
 /** Names prep leaves for a person to replace; render warns while any remain. */
 export const PLACEHOLDER = { shot: "Shot", clip: "Name by ear", words: "Words?", act: "Act title" };
 /** A lane name for each stem a separator writes, in the order the lanes are drafted. */
-export const STEM_NAMES = { vocals: "Vocals", drums: "Drums", bass: "Bass", guitar: "Guitar", piano: "Keys", other: "Synths & FX" };
+const STEM_NAMES = { vocals: "Vocals", drums: "Drums", bass: "Bass", guitar: "Guitar", piano: "Keys", other: "Synths & FX" };
 /** A clip quieter than this (dB below full scale at its peak) is inaudible on a phone speaker and is left out. */
 export const AUDIBLE_DB = -35;
 
@@ -51,7 +51,7 @@ export function joinClips(clips, gap) {
 /**
  * A draft spec from prep's analysis (analyse.py) and the vocal stem's words. Paths are relative to the spec's folder.
  */
-export function draftSpec(analysis, words = [], { source, stems, avatar = null } = {}) {
+export function draftSpec(analysis, words = [], { source, stems } = {}) {
   const bounds = [0, ...analysis.cuts.map((c) => c.t), analysis.duration];
   const shots = bounds.slice(0, -1).map((a, i) => [a, bounds[i + 1]]).filter(([a, b]) => b - a > 0.05)
     .map(([a, b], i) => [a, b, `${PLACEHOLDER.shot} ${i + 1}`]);
@@ -69,14 +69,14 @@ export function draftSpec(analysis, words = [], { source, stems, avatar = null }
         : joinClips(s.clips.filter((c) => c.peakDb > AUDIBLE_DB), gap).map((c) => [c.start, c.end, PLACEHOLDER.clip]),
     }));
   return {
-    _note: "Drafted by prep.mjs. Name every shot, clip and act by eye and ear (prep/shots.jpg, prep/stems.png, prep/words.txt), merge or split the measured clips, drop what you can't hear, then add the end scene.",
+    _note: "Drafted by prep.mjs. Name every shot, clip and act by eye and ear (prep/shots.jpg, prep/stems.png, prep/words.txt), "
+      + "merge or split the measured clips, drop what you can't hear, then add the end scene.",
     source, stems,
-    ...(avatar ? { avatar } : {}),
     cover: r1(analysis.duration * 0.5),
     // the anchor is any bar's start; the first one at or after 0 (drums on the very first frame can measure just below)
     ...(tempo ? { bpm: tempo.bpm, barAnchor: firstBarAt(tempo.barAnchor, tempo.bpm) } : { ruler: "seconds" }),
     pullBack: Math.max(0.1, r1(analysis.duration - 2.5)),
-    hold: 1.2,
+    hold: HOLD,
     acts: [{ start: 0, title: PLACEHOLDER.act }],
     lanes, transitions: [], shots,
   };

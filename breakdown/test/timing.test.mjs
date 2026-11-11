@@ -16,7 +16,7 @@ test("easing: fixed ends, linear when the curve is, monotone in between", () => 
 
 test("the pull-back starts at pullBack (or the film's end) and the streak follows the hold", () => {
   assert.deepEqual(schedule({ pullBack: 24.4, hold: 0.6 }, 30), { pull: { a: 24.4, b: 24.4 + PULL_BACK }, streakAt: 24.4 + PULL_BACK + 0.6 });
-  assert.equal(schedule({ pullBack: 40 }, 30).streakAt, 30 + PULL_BACK + HOLD);
+  assert.equal(schedule({ pullBack: 40, hold: HOLD }, 30).streakAt, 30 + PULL_BACK + HOLD);
 });
 
 test("the end scene's clock: lines word by word, the lockup after the last word settles", () => {

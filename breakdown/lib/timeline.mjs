@@ -3,7 +3,7 @@
 // under a fixed playhead that carries the running time; the sounding clip fills white and the playing shot is outlined.
 // Below the tracks, the act now playing, numbered.
 import { clamp, easeOut, mix, T } from "./ease.mjs";
-import { COLOR, FOOTER, LABEL, SCROLL, STICK, WINDOW } from "./layout.mjs";
+import { COLOR, FOOTER, LABEL, SCROLL, STICK } from "./layout.mjs";
 import { envelopeRms } from "./media.mjs";
 import { FONT, esc, labelWidth, measureWords, wordAt, wordReveal } from "./svg.mjs";
 import { WORD_REVEAL, actIndexAt, beatGrid, lit, timecode } from "./timing.mjs";
@@ -38,7 +38,7 @@ export async function createTimeline({ spec, tl, view, duration, pull, thumbAt, 
   const actNo = (i) => String(i + 1).padStart(2, "0");
   const actNoW = Math.max(...await Promise.all(acts.map((_, i) => labelWidth(actNo(i), FOOTER.size, 500, -0.5))));
   const grid = spec.bpm ? beatGrid(spec.bpm, spec.barAnchor) : null;
-  const thumb = { h: tl.videoH, w: Math.round(tl.videoH * WINDOW.w / WINDOW.h) };
+  const thumb = { h: tl.videoH, w: tl.thumbW };
 
   async function shotSvg(sh, v, id, busy) {
     const xa = v.X(sh.start) + 1.5, xb = v.X(sh.end) - 1.5, w = xb - xa, y = tl.video, h = tl.videoH;
@@ -56,10 +56,12 @@ export async function createTimeline({ spec, tl, view, duration, pull, thumbAt, 
     const tx = clamp(xa + 8, xb - sh.w - 28, tl.x0 + STICK);
     if (sh.fits && v.z < 1 && !on && !(busy && tx < busy[1] + 6 && tx + sh.w + 20 > busy[0] - 6)) {
       s += `<g opacity="${(1 - v.z).toFixed(3)}"><rect x="${fx(tx)}" y="${y + 8}" width="${sh.w + 20}" height="36" rx="9" fill="rgba(16,16,16,0.78)"/>`
-        + `<text x="${fx(tx + 10)}" y="${y + 34}" font-family="${FONT}" font-weight="500" letter-spacing="-0.3" font-size="${LABEL.shot}" fill="${COLOR.fg}">${esc(sh.name)}</text></g>`;
+        + `<text x="${fx(tx + 10)}" y="${y + 34}" `
+        + `font-family="${FONT}" font-weight="500" letter-spacing="-0.3" font-size="${LABEL.shot}" fill="${COLOR.fg}">${esc(sh.name)}</text></g>`;
     }
     s += `</g><rect x="${fx(xa + 0.5)}" y="${y + 0.5}" width="${fx(w - 1)}" height="${h - 1}" rx="${r}" fill="none" stroke="${COLOR.line}"/>`;
-    if (on > 0) s += `<rect x="${fx(xa + 1.5)}" y="${y + 1.5}" width="${fx(w - 3)}" height="${h - 3}" rx="${Math.max(0, r - 1)}" fill="none" stroke="${COLOR.fg}" stroke-opacity="${on.toFixed(3)}" stroke-width="3"/>`;
+    if (on > 0) s += `<rect x="${fx(xa + 1.5)}" y="${y + 1.5}" width="${fx(w - 3)}" height="${h - 3}" rx="${Math.max(0, r - 1)}" `
+      + `fill="none" stroke="${COLOR.fg}" stroke-opacity="${on.toFixed(3)}" stroke-width="3"/>`;
     return s;
   }
 
@@ -70,7 +72,8 @@ export async function createTimeline({ spec, tl, view, duration, pull, thumbAt, 
     const k = (1 - v.z) * (Math.abs(v.tt - tc) < 0.25 ? 1 : 0.0), g = mix(38, 245, k), ink = mix(200, 16, k);
     const s = mix(1, 0.6, v.z), bw = 36 * s, bh = 52 * s;
     return `<rect x="${fx(x - bw / 2)}" y="${fx(y - bh / 2)}" width="${fx(bw)}" height="${fx(bh)}" rx="${fx(8 * s)}" fill="${grey(g)}" stroke="${COLOR.lineStrong}"/>`
-      + `<path d="M${fx(x - 9 * s)} ${fx(y - 8 * s)}L${fx(x + 9 * s)} ${fx(y + 8 * s)}L${fx(x + 9 * s)} ${fx(y - 8 * s)}L${fx(x - 9 * s)} ${fx(y + 8 * s)}Z" fill="${grey(ink)}"/>`;
+      + `<path d="M${fx(x - 9 * s)} ${fx(y - 8 * s)}L${fx(x + 9 * s)} ${fx(y + 8 * s)}`
+      + `L${fx(x + 9 * s)} ${fx(y - 8 * s)}L${fx(x - 9 * s)} ${fx(y + 8 * s)}Z" fill="${grey(ink)}"/>`;
   }
 
   function clipSvg(c, y, v, t, id, over) {
@@ -88,17 +91,20 @@ export async function createTimeline({ spec, tl, view, duration, pull, thumbAt, 
     }
     const d = `M${top.join("L")}L${bot.reverse().join("L")}Z`, ink = mix(255, 16, k), played = v.X(v.tt);
     s += `<path d="${d}" fill="rgba(${Math.round(ink)},${Math.round(ink)},${Math.round(ink)},${mix(0.2, 0.22, k).toFixed(3)})"/>`;
-    if (k > 0 && played > xa) s += `<clipPath id="p${id}"><rect x="${fx(xa)}" y="${y}" width="${fx(Math.min(played, xb) - xa)}" height="${h}"/></clipPath><path d="${d}" clip-path="url(#p${id})" fill="rgba(16,16,16,${(0.62 * k).toFixed(3)})"/>`;
+    if (k > 0 && played > xa) s += `<clipPath id="p${id}"><rect x="${fx(xa)}" y="${y}" width="${fx(Math.min(played, xb) - xa)}" height="${h}"/></clipPath>`
+      + `<path d="${d}" clip-path="url(#p${id})" fill="rgba(16,16,16,${(0.62 * k).toFixed(3)})"/>`;
     // the label sticks to the visible left edge of a long clip; labels leave during the pull-back, so the whole post
     // reads as shape
     const lw = c.w + 26, lx = clamp(xa, xb - lw, tl.x0 + STICK);
     const label = (x) => `<rect x="${fx(x)}" y="${y}" width="${lw}" height="${h}" fill="${grey(g)}"/>`
-      + `<text x="${fx(x + 12)}" y="${y + h / 2 + 9}" font-family="${FONT}" font-weight="500" letter-spacing="-0.4" font-size="${LABEL.clip}" fill="${k > 0.5 ? COLOR.ground : "#d4d4d4"}">${esc(c.label)}</text>`;
+      + `<text x="${fx(x + 12)}" y="${y + h / 2 + 9}" `
+      + `font-family="${FONT}" font-weight="500" letter-spacing="-0.4" font-size="${LABEL.clip}" fill="${k > 0.5 ? COLOR.ground : "#d4d4d4"}">${esc(c.label)}</text>`;
     if (c.fits && v.z < 1) s += `<g opacity="${(1 - v.z).toFixed(3)}">${label(lx)}</g>`;
     // a sounding clip too short for its words shows them anyway, on a tab over its neighbours, only while it sounds
     else if (t >= c.start && t <= c.end && v.z < 1) {
       const x = clamp(tl.x0 + STICK, tl.x1 - lw, xa);
-      over.push(`<g opacity="${(1 - v.z).toFixed(3)}"><clipPath id="o${id}"><rect x="${fx(x)}" y="${y}" width="${lw}" height="${h}" rx="10"/></clipPath><g clip-path="url(#o${id})">${label(x)}</g>`
+      over.push(`<g opacity="${(1 - v.z).toFixed(3)}"><clipPath id="o${id}"><rect x="${fx(x)}" y="${y}" width="${lw}" height="${h}" rx="10"/></clipPath>`
+        + `<g clip-path="url(#o${id})">${label(x)}</g>`
         + `<rect x="${fx(x + 0.5)}" y="${y + 0.5}" width="${lw - 1}" height="${h - 1}" rx="10" fill="none" stroke="${COLOR.lineStrong}"/></g>`);
     }
     return s + `</g><rect x="${fx(xa + 0.5)}" y="${y + 0.5}" width="${fx(w - 1)}" height="${h - 1}" rx="${r}" fill="none" stroke="${COLOR.line}"/>`;
@@ -132,7 +138,9 @@ export async function createTimeline({ spec, tl, view, duration, pull, thumbAt, 
         s += tick(x);
         if (sec % every === 0 && Math.abs(x + 22 - v.head) > 88) s += num(x, timecode(sec).slice(0, -2));
       }
-      if (grid && v.pxs * grid.beat > 14) for (let tc = grid.firstBeat; tc < duration; tc += grid.beat) { const x = v.X(tc); if (x > tl.x0 - 4 && x < tl.x1 + 4) s += beatTick(x); }
+      if (grid && v.pxs * grid.beat > 14) {
+        for (let tc = grid.firstBeat; tc < duration; tc += grid.beat) { const x = v.X(tc); if (x > tl.x0 - 4 && x < tl.x1 + 4) s += beatTick(x); }
+      }
       return s;
     }
     const barStep = v.pxs * grid.bar < 80 ? 2 : 1;
@@ -148,7 +156,8 @@ export async function createTimeline({ spec, tl, view, duration, pull, thumbAt, 
 
   async function svg(t) {
     const v = view(t);
-    let s = `<clipPath id="win"><rect x="${tl.x0}" y="${tl.ruler - 10}" width="${tl.x1 - tl.x0}" height="${tl.bottom - tl.ruler + 20}"/></clipPath><g clip-path="url(#win)">`, id = 0;
+    let s = `<clipPath id="win"><rect x="${tl.x0}" y="${tl.ruler - 10}" width="${tl.x1 - tl.x0}" height="${tl.bottom - tl.ruler + 20}"/></clipPath>`
+      + `<g clip-path="url(#win)">`, id = 0;
     s += rulerSvg(v);
     // V1 and its transitions; the playing shot's name, white, goes on top and may pass a short clip's edge
     s += `<rect x="${tl.x0}" y="${tl.video}" width="${tl.x1 - tl.x0}" height="${tl.videoH}" rx="10" fill="rgba(255,255,255,0.025)"/>`;
@@ -158,7 +167,8 @@ export async function createTimeline({ spec, tl, view, duration, pull, thumbAt, 
     for (const tr of spec.transitions) s += transitionSvg(tr, v);
     if (now && v.z < 1) {
       s += `<g opacity="${(1 - v.z).toFixed(3)}"><rect x="${fx(lx)}" y="${tl.video + 8}" width="${now.w + 20}" height="36" rx="9" fill="${COLOR.fg}"/>`
-        + `<text x="${fx(lx + 10)}" y="${tl.video + 34}" font-family="${FONT}" font-weight="500" letter-spacing="-0.3" font-size="${LABEL.shot}" fill="${COLOR.ground}">${esc(now.name)}</text></g>`;
+        + `<text x="${fx(lx + 10)}" y="${tl.video + 34}" `
+        + `font-family="${FONT}" font-weight="500" letter-spacing="-0.3" font-size="${LABEL.shot}" fill="${COLOR.ground}">${esc(now.name)}</text></g>`;
     }
     lanes.forEach((lane, li) => {
       const y = tl.laneY(li), over = [];
@@ -169,24 +179,29 @@ export async function createTimeline({ spec, tl, view, duration, pull, thumbAt, 
     s += "</g>";
     // edges fade into the ground while scrolling
     const fe = (1 - v.z).toFixed(3), fy = tl.ruler + 34, fh = tl.bottom - fy + 4;
-    s += `<linearGradient id="fl" x1="0" x2="1"><stop offset="0" stop-color="${COLOR.ground}" stop-opacity="${fe}"/><stop offset="1" stop-color="${COLOR.ground}" stop-opacity="0"/></linearGradient>`
-      + `<linearGradient id="fr" x1="1" x2="0"><stop offset="0" stop-color="${COLOR.ground}" stop-opacity="${fe}"/><stop offset="1" stop-color="${COLOR.ground}" stop-opacity="0"/></linearGradient>`
+    s += `<linearGradient id="fl" x1="0" x2="1"><stop offset="0" stop-color="${COLOR.ground}" stop-opacity="${fe}"/>`
+      + `<stop offset="1" stop-color="${COLOR.ground}" stop-opacity="0"/></linearGradient>`
+      + `<linearGradient id="fr" x1="1" x2="0"><stop offset="0" stop-color="${COLOR.ground}" stop-opacity="${fe}"/>`
+      + `<stop offset="1" stop-color="${COLOR.ground}" stop-opacity="0"/></linearGradient>`
       + `<rect x="${tl.x0}" y="${fy}" width="56" height="${fh}" fill="url(#fl)"/><rect x="${tl.x1 - 72}" y="${fy}" width="72" height="${fh}" fill="url(#fr)"/>`;
     // track headers: tag and name; a sounding track reads brighter
     const header = (y, h, tag, name, k) => `<text x="${tl.head}" y="${y + h / 2 - 8}" font-family="${FONT}" font-weight="500" font-size="19" fill="${COLOR.faint}">${tag}</text>`
       + `<text x="${tl.head}" y="${y + h / 2 + 22}" font-family="${FONT}" font-size="25" letter-spacing="-0.4" fill="${grey(mix(163, 245, k))}">${esc(name)}</text>`;
-    if (spec.bpm) s += `<text x="${tl.head}" y="${tl.ruler + 30}" font-family="${FONT}" font-size="21" letter-spacing="-0.3" fill="${COLOR.subtle}">${Math.round(spec.bpm)} BPM</text>`;
+    if (spec.bpm) s += `<text x="${tl.head}" y="${tl.ruler + 30}" `
+      + `font-family="${FONT}" font-size="21" letter-spacing="-0.3" fill="${COLOR.subtle}">${Math.round(spec.bpm)} BPM</text>`;
     s += header(tl.video, tl.videoH, "V1", "Video", 1 - v.z);
     lanes.forEach((lane, li) => { s += header(tl.laneY(li), tl.laneH, `A${li + 1}`, lane.name, Math.max(0, ...lane.clips.map((c) => lit(c, t))) * (1 - v.z)); });
     // the playhead and the running time, gone once the post is whole
     const ho = 1 - easeOut(T(t, pull.b, pull.b + 0.4));
-    if (ho > 0) s += `<rect x="${fx(v.head - 1)}" y="${tl.ruler + 30}" width="2" height="${tl.bottom - tl.ruler - 22}" fill="${COLOR.fg}" fill-opacity="${ho.toFixed(3)}"/>` + timePill(v, ho);
+    if (ho > 0) s += `<rect x="${fx(v.head - 1)}" y="${tl.ruler + 30}" width="2" height="${tl.bottom - tl.ruler - 22}" `
+      + `fill="${COLOR.fg}" fill-opacity="${ho.toFixed(3)}"/>` + timePill(v, ho);
     return s;
   }
 
   function footer(t) {
     const v = view(t), i = actIndexAt(acts, v.tt), act = acts[i], n = wordAt(t, act.start, 0);
-    return `<g opacity="${(1 - v.z).toFixed(3)}"><text x="${tl.head}" y="${(FOOTER.y + n.dy * FOOTER.size).toFixed(1)}" font-family="${FONT}" font-weight="500" font-size="${FOOTER.size}" letter-spacing="-0.5" fill="${COLOR.faint}" opacity="${n.opacity.toFixed(3)}">${actNo(i)}</text>`
+    return `<g opacity="${(1 - v.z).toFixed(3)}"><text x="${tl.head}" y="${(FOOTER.y + n.dy * FOOTER.size).toFixed(1)}" `
+      + `font-family="${FONT}" font-weight="500" font-size="${FOOTER.size}" letter-spacing="-0.5" fill="${COLOR.faint}" opacity="${n.opacity.toFixed(3)}">${actNo(i)}</text>`
       + wordReveal(act.m, tl.head + actNoW + FOOTER.gap, FOOTER.y, t, act.start + WORD_REVEAL.stagger) + `</g>`;
   }
 

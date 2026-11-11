@@ -10,7 +10,7 @@ import { inkBox, measureWords, text, wordReveal } from "./svg.mjs";
 import { endSchedule } from "./timing.mjs";
 
 /** Each tile plays 8 s of its post, from 1 s in (past fade-ins) unless the spec gives another start. */
-export const TILE = { from: 1, length: 8 };
+const TILE = { from: 1, length: 8 };
 const MARQUEE = { rows: END.rows, gap: END.rowGap, speed: 70, fade: 120, ground: COLOR.ground, r: 16 };
 
 /**
@@ -67,7 +67,9 @@ export async function createEndScene({ end, base, cacheDir, decode, log, start, 
     if (decode) {
       // a tile must play its whole window with picture in it: a short or dark post reads as a hole in the wall
       const dark = await darkSeconds(tile, fps);
-      if (tile.frames.length < TILE.length * fps * 0.95 || dark > TILE.length / 3) log(`warning: end post ${k + 1} (${post.file}): ${(tile.frames.length / fps).toFixed(1)} of ${TILE.length} s, ${dark} dark seconds; pick another`);
+      if (tile.frames.length < TILE.length * fps * 0.95 || dark > TILE.length / 3) {
+        log(`warning: end post ${k + 1} (${post.file}): ${(tile.frames.length / fps).toFixed(1)} of ${TILE.length} s, ${dark} dark seconds; pick another`);
+      }
     }
     const { width, height } = probe(file);
     tiles.push({ ...tile, n: tile.frames.length, ratio: width / height });
@@ -90,7 +92,8 @@ export async function createEndScene({ end, base, cacheDir, decode, log, start, 
     let body = marquee.svg(e).replace(/@@T(\d+)@@/g, (_, k) => tileUri(cards[k], e));
     body += wordReveal(lines[0], END.margin, y1, t, clock.lines[0]) + (lines[1] ? wordReveal(lines[1], END.margin, y2, t, clock.lines[1]) : "");
     if (lockup) body += lockup.svg(t, clock.lockAt);
-    return sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="${COLOR.ground}"/>${body}</svg>`)).removeAlpha().raw().toBuffer();
+    return sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">`
+      + `<rect width="${W}" height="${H}" fill="${COLOR.ground}"/>${body}</svg>`)).removeAlpha().raw().toBuffer();
   }
   return { frame, end: clock.end };
 }

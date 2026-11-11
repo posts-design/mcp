@@ -7,7 +7,7 @@
 //
 // The film is the post at its own speed and with its own sound, over an editor's timeline of itself (README.md).
 import { execFileSync, spawnSync } from "node:child_process";
-import { realpathSync, renameSync, rmSync } from "node:fs";
+import { existsSync, realpathSync, renameSync, rmSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -17,25 +17,27 @@ import { readArgs, runCli } from "./lib/cli.mjs";
 import { encodeFrames, isWorker } from "./lib/encode.mjs";
 import { createBreakdown } from "./lib/film.mjs";
 import { COLOR, FRAME, TALL } from "./lib/layout.mjs";
-import { defaultCache, requireTools } from "./lib/media.mjs";
+import { defaultCache, localPost, requireTools, stemFile } from "./lib/media.mjs";
 import { parseSpec, warnings } from "./lib/spec.mjs";
 import { requireFont } from "./lib/svg.mjs";
 
 /**
  * Renders `specFile` to `out`, or writes stills at `stills` seconds. Paths in the spec are relative to `base`
- * (default: the spec's folder). `lockup` draws a mark under the end wall (see lib/end-scene.mjs).
+ * (default: the spec's folder). `lockup` is the one drawing hook for a script that imports this: a mark drawn under
+ * the end scene's wall, `{ top, svg(t, at) }` (its ink's top in px, and its SVG at time t once it plants at `at`).
  *
  * With more than one job, render processes re-run the script that called this with the same arguments (see
  * lib/encode.mjs), so a script that calls render() must reach it the same way every time and do nothing else first.
  */
-export async function render({ specFile, out, stills = null, jobs = Math.min(4, os.availableParallelism()), base, cacheDir = defaultCache(), lockup = null, log = console.log }) {
+export async function render({ specFile, out, stills = null, jobs = Math.min(4, os.availableParallelism()), base, cacheDir = defaultCache(),
+  lockup = null, log = console.log }) {
   const worker = isWorker(), say = worker ? () => {} : log;
   let raw;
   try { raw = JSON.parse(await readFile(specFile, "utf8")); } catch (e) { throw new Error(`${specFile}: ${e.message}`); }
   const spec = parseSpec(raw);
   base ??= path.dirname(path.resolve(specFile));
   out = path.resolve(out ?? specFile.replace(/\.json$/i, "") + ".mp4");
-  if (!worker) { requireTools(); await requireFont(); }
+  if (!worker) { requireTools(); await requireFont(); await preflight(spec, base, cacheDir); }
   const film = await createBreakdown(spec, { base, cacheDir, decode: !worker, log: say, lockup });
   if (!worker) for (const w of warnings(spec, film.duration)) say(`warning: ${w}`);
   const { width: W, height: H, fps } = FRAME, tall = spec.aspect === "9:16";
@@ -62,7 +64,7 @@ export async function render({ specFile, out, stills = null, jobs = Math.min(4, 
     return;
   }
   // The post's own mix under a true-peak guard: a limiter at 4× the rate keeps decoded peaks under −1.5 dBTP. `gainDb`
-  // trims a mix mastered hotter than −16 LUFS first.
+  // trims a mix first (loudness() suggests it above −15 LUFS, to reach −16).
   const gain = spec.gainDb ? `volume=${spec.gainDb}dB,` : "", delay = Math.round(1000 / fps);
   execFileSync("ffmpeg", ["-v", "error", "-y", "-i", silent, "-i", path.resolve(base, spec.source), "-filter_complex",
     `[1:a]${gain}aresample=192000,alimiter=limit=0.78:attack=1:release=60:level=0,aresample=48000,adelay=${delay}:all=1,apad[a]`,
@@ -70,6 +72,21 @@ export async function render({ specFile, out, stills = null, jobs = Math.min(4, 
   rmSync(silent, { force: true });
   say(`done ${out} (${(count / fps).toFixed(2)} s)`);
   say(loudness(out));
+}
+
+/**
+ * What a render needs, found before the film is decoded rather than minutes into it: the film, every stem a lane
+ * draws, and the end scene's linked posts (downloaded now, into the cache).
+ */
+async function preflight(spec, base, cacheDir) {
+  const source = path.resolve(base, spec.source), stems = path.resolve(base, spec.stems);
+  if (!existsSync(source)) throw new Error(`source: no film at ${source}`);
+  if (!existsSync(stems)) throw new Error(`stems: no folder at ${stems}`);
+  for (const stem of new Set(spec.lanes.flatMap((l) => [l.stem, ...l.clips.map((c) => c.stem)]))) stemFile(stems, stem);
+  for (const post of spec.end?.posts ?? []) {
+    const file = await localPost(post.file, base, cacheDir);
+    if (!existsSync(file)) throw new Error(`end.posts: no file at ${file}`);
+  }
 }
 
 /** Integrated loudness and true peak of the film's sound, with what to change when it is far from −16 LUFS. */

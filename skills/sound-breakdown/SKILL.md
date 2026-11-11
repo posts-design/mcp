@@ -12,13 +12,13 @@ they choose ElevenLabs.
 
 ## 1. Set up
 
-1. Clone the repository and run `npm install` in its `breakdown/` folder. Run every command below from there.
+1. Clone the repository. Run every command below from its `breakdown/` folder.
 2. Check the tools: `node --version` (20.9 or later), `ffmpeg -version` and `ffprobe -version`, and the Inter font
    (render stops with a clear message if it is missing; it installs from rsms.me/inter).
 3. Before installing anything, tell your person in one message what will download and about how much, and ask once
    about any choice that applies. Check first whether `ELEVENLABS_API_KEY` is set (`[ -n "$ELEVENLABS_API_KEY" ] &&
    echo set`; never print it) and, on Linux, whether `nvidia-smi` finds an NVIDIA GPU.
-   - **Always:** numpy for measuring, about 17 MB.
+   - **Always:** `npm install` for sharp, which renders (about 10 MB), and numpy for measuring, about 17 MB.
    - **Stems:** Demucs on their machine with the CPU-only PyTorch, about 250 MB, and a 55 MB model on the first prep.
      With the key set, ask: ElevenLabs separates the stems with nothing to install, on their ElevenLabs plan, or
      Demucs keeps them on the machine. With an NVIDIA GPU on Linux, also ask whether they want the CUDA PyTorch,
@@ -27,7 +27,7 @@ they choose ElevenLabs.
      and nothing installs; ask if they would rather keep them local. Otherwise faster-whisper, about 130 MB, and its
      `small` model, about 490 MB, the first time it hears words; ask whether they want `large-v3-turbo` instead, which
      hears more and is about 1.6 GB.
-4. Install what they chose, in a virtual environment: `python3 -m venv .venv`, then
+4. Install what they chose: `npm install`, then in a virtual environment `python3 -m venv .venv` and
    `.venv/bin/pip install -r py/requirements.txt`, and for Demucs
    `.venv/bin/pip install -r py/requirements-demucs.txt --extra-index-url https://download.pytorch.org/whl/cpu`
    (leave the index out only for the CUDA build). Leave faster-whisper until prep asks for it: when the film has
@@ -46,10 +46,10 @@ vertical video. If they want the brand's mark in the corner, ask for its avatar 
 ## 3. Prep
 
 ```bash
-node prep.mjs <film> work/ --python .venv/bin/python --avatar <logo>
+node prep.mjs <film> work/ --python .venv/bin/python
 ```
 
-Add what they chose: `--stems elevenlabs`, `--words whisper` to keep words local while a key is set, or
+Add `--avatar <logo>` when they gave you the brand's mark, and what they chose: `--stems elevenlabs`, `--words whisper` to keep words local while a key is set, or
 `--whisper-model large-v3-turbo`. Prep takes about a minute for a short film, longer on its first run while it
 downloads models. Run it in the background or with a long timeout; if it is cut off, run it again, since it keeps
 finished stems and words. Read what it prints (the number of boundaries, the tempo, each stem's clip count), then
@@ -80,7 +80,7 @@ Edit `work/breakdown.json`. The README's Naming section has the rules; the ones 
 
 Ask whether they want a wall of the brand's other posts at the end. With the MCP, call `search_references` with
 `brand` set to the brand and `format: "video"`. Leave out the film itself, keep links whose `video.role` is
-`analysis`, pick 8 to 12 that play well small, and put their `video.url` in `end.posts` (they download when
+`analysis`, pick 7 to 12 that play well small, and put their `video.url` in `end.posts` (they download when
 rendering). Without the MCP, use video files your person gives you. Write the closing line with them, two short
 lines ("Every Acme post," / "in one place."). Leave `end` out if they don't want a wall.
 
@@ -104,4 +104,5 @@ lines ("Every Acme post," / "in one place."). Leave `end` out if they don't want
 ## Hand over
 
 Give your person the film's path, its length and loudness, any warnings you left in place and why, and a suggested
-caption in the pattern "breakdown of @brand's new <thing> film by @<who posted the film>".
+caption in the pattern "breakdown of @brand's <thing> film by @<who posted it>". Call the film new only when your
+person says it is.

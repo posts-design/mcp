@@ -8,6 +8,7 @@
 import { spawn } from "node:child_process";
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { clearStale } from "./media.mjs";
 
 const BLOCK = 15;
 const ENV = "BREAKDOWN_BLOCKS";
@@ -50,7 +51,9 @@ export async function encodeFrames({ count, frameOf, width, height, fps, outArgs
     enc.stdin.end();
     return done;
   }
-  const dir = mkdtempSync(path.join(scratch, "render-"));
+  // render-<pid>-…: a killed render's blocks are cleared by the next one
+  clearStale(scratch, "render-");
+  const dir = mkdtempSync(path.join(scratch, `render-${process.pid}-`));
   try {
     const t0 = Date.now(), blocks = Math.ceil(count / BLOCK), n = Math.min(jobs, blocks);
     log(`rendering ${count} frames on ${n} workers`);
@@ -70,7 +73,8 @@ export async function encodeFrames({ count, frameOf, width, height, fps, outArgs
     log(`rendered in ${((Date.now() - t0) / 1000).toFixed(0)} s; encoding`);
     const list = path.join(dir, "blocks.txt");
     writeFileSync(list, Array.from({ length: blocks }, (_, b) => `file 'block-${String(b).padStart(5, "0")}.mkv'\n`).join(""));
-    const dec = spawn("ffmpeg", ["-loglevel", "error", "-f", "concat", "-safe", "0", "-i", list, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"], { stdio: ["ignore", "pipe", "inherit"] });
+    const dec = spawn("ffmpeg", ["-loglevel", "error", "-f", "concat", "-safe", "0", "-i", list, "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
+      { stdio: ["ignore", "pipe", "inherit"] });
     dec.stdout.pipe(enc.stdin);
     await Promise.all([closed(dec), done]);
   } finally {

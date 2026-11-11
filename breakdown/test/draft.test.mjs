@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { AUDIBLE_DB, draftSpec, joinClips, phrases, placeholders, uncovered } from "../lib/draft.mjs";
+import { AUDIBLE_DB, PLACEHOLDER, draftSpec, joinClips, phrases, placeholders, uncovered } from "../lib/draft.mjs";
 import { parseSpec } from "../lib/spec.mjs";
 
 const analysis = {
@@ -39,7 +39,7 @@ test("lanes: audible stems only, vocals first, quiet clips dropped", () => {
 
 test("vocal clips follow the heard phrases, with the unheard rest left to name by ear", () => {
   const { lanes } = draftSpec(analysis, words, { source: "film.mp4", stems: "stems" });
-  assert.deepEqual(lanes[0].clips.map(([a, b, label]) => [a, b, label === "Words?"]), [[5.1, 6.2, false], [12, 13, true]]);
+  assert.deepEqual(lanes[0].clips.map(([a, b, label]) => [a, b, label === PLACEHOLDER.words]), [[5.1, 6.2, false], [12, 13, true]]);
   assert.deepEqual(phrases([{ start: 0, end: 0.4, text: "a" }, { start: 0.5, end: 0.9, text: "b" }, { start: 2, end: 2.3, text: "c" }]).map((p) => p.text), ["a b", "c"]);
   assert.deepEqual(uncovered([{ start: 0, end: 10 }], [{ start: 2, end: 3 }, { start: 3.2, end: 9.8 }]), [{ start: 0, end: 2 }]);
 });

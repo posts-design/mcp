@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
+import { PLACEHOLDER } from "../lib/draft.mjs";
 import { MAX_LANES } from "../lib/layout.mjs";
+import { HOLD } from "../lib/timing.mjs";
 import { parseSpec, warnings } from "../lib/spec.mjs";
 
 const example = () => JSON.parse(readFileSync(new URL("../breakdown.example.json", import.meta.url), "utf8"));
@@ -20,7 +22,7 @@ test("defaults: bars ruler, 4:5, no gain, black-keyed mark, no transitions, no e
   const raw = example();
   for (const k of ["ruler", "aspect", "gainDb", "markKey", "transitions", "end", "avatar", "hold"]) delete raw[k];
   const s = parseSpec(raw);
-  assert.deepEqual([s.ruler, s.aspect, s.gainDb, s.markKey, s.transitions, s.end, s.avatar, s.hold], ["bars", "4:5", 0, "black", [], null, null, undefined]);
+  assert.deepEqual([s.ruler, s.aspect, s.gainDb, s.markKey, s.transitions, s.end, s.avatar, s.hold], ["bars", "4:5", 0, "black", [], null, null, HOLD]);
 });
 
 test("a clip may draw another stem than its lane's", () => {
@@ -77,5 +79,5 @@ test("times past the film's end, a late cover and placeholder names are warned a
   assert.deepEqual(warnings(s, 30), []);
   assert.ok(warnings(s, 20).length > 3);
   assert.equal(warnings({ ...s, cover: 25 }, 30).length, 1);
-  assert.equal(warnings({ ...s, acts: [{ start: 0, title: "Act title" }] }, 30).length, 1);
+  assert.equal(warnings({ ...s, acts: [{ start: 0, title: PLACEHOLDER.act }] }, 30).length, 1);
 });

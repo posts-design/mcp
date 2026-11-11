@@ -15,7 +15,8 @@ export const nextId = (prefix = "fx") => `${prefix}${uid++}`;
 
 /** One line of text. `ls` is letter-spacing in em. */
 export function text(x, y, s, { size, weight = 400, fill = COLOR.fg, anchor = "start", ls = 0, opacity = 1 }) {
-  return `<text x="${f2(x)}" y="${f2(y)}" font-family="${FONT}" font-size="${f2(size)}" font-weight="${weight}" letter-spacing="${f2(ls * size)}" text-anchor="${anchor}" fill="${fill}" opacity="${f2(opacity)}">${esc(s)}</text>`;
+  return `<text x="${f2(x)}" y="${f2(y)}" font-family="${FONT}" font-size="${f2(size)}" `
+    + `font-weight="${weight}" letter-spacing="${f2(ls * size)}" text-anchor="${anchor}" fill="${fill}" opacity="${f2(opacity)}">${esc(s)}</text>`;
 }
 
 /** The ink box of an SVG fragment drawn at (originX, originY): its left and top relative to that origin, and its size. */
@@ -35,7 +36,8 @@ const labelWidths = new Map();
 export async function labelWidth(s, size, weight = 500, tracking = 0) {
   const key = `${s}|${size}|${weight}|${tracking}`;
   if (!labelWidths.has(key)) {
-    const svg = `<svg width="2400" height="${size * 3}"><text x="10" y="${size * 2}" font-family="${FONT}" font-weight="${weight}" letter-spacing="${tracking}" font-size="${size}" fill="#000">${esc(s)}</text></svg>`;
+    const svg = `<svg width="2400" height="${size * 3}"><text x="10" y="${size * 2}" `
+      + `font-family="${FONT}" font-weight="${weight}" letter-spacing="${tracking}" font-size="${size}" fill="#000">${esc(s)}</text></svg>`;
     labelWidths.set(key, (await sharp(Buffer.from(svg)).trim().toBuffer({ resolveWithObject: true })).info.width);
   }
   return labelWidths.get(key);

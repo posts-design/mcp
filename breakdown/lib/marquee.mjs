@@ -22,7 +22,8 @@ export function createMarquee({ width, cards, rows = 3, top = 0, height = 180, g
     const id = nextId("mq"), y0 = top - gap, h = rows * (height + gap) + gap;
     return `<linearGradient id="${id}l" x1="0" x2="1"><stop offset="0" stop-color="${ground}"/><stop offset="1" stop-color="${ground}" stop-opacity="0"/></linearGradient>` +
       `<linearGradient id="${id}r" x1="1" x2="0"><stop offset="0" stop-color="${ground}"/><stop offset="1" stop-color="${ground}" stop-opacity="0"/></linearGradient>` +
-      `<rect x="0" y="${f2(y0)}" width="${fade}" height="${f2(h)}" fill="url(#${id}l)"/><rect x="${f2(width - fade)}" y="${f2(y0)}" width="${fade}" height="${f2(h)}" fill="url(#${id}r)"/>`;
+      `<rect x="0" y="${f2(y0)}" width="${fade}" height="${f2(h)}" fill="url(#${id}l)"/>`
+        + `<rect x="${f2(width - fade)}" y="${f2(y0)}" width="${fade}" height="${f2(h)}" fill="url(#${id}r)"/>`;
   })();
   // every tile on screen at time t: { card (index into cards), row, x (left edge), w }
   const visible = (t) => {

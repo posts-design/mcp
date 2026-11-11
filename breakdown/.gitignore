@@ -1,0 +1,6 @@
+# what the quick start creates inside the clone
+node_modules/
+.venv/
+__pycache__/
+work/
+cut/

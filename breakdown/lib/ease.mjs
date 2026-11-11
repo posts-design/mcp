@@ -30,6 +30,6 @@ export const easeInOut = cubicBezier(0.77, 0, 0.175, 1);
 export const clamp = (min, max, v) => (v > max ? max : v < min ? min : v);
 export const mix = (from, to, p) => from + (to - from) * p;
 /** Where `value` sits between `from` and `to`, unclamped (1 when the range is empty). */
-export const progress = (from, to, value) => (to - from ? (value - from) / (to - from) : 1);
+const progress = (from, to, value) => (to - from ? (value - from) / (to - from) : 1);
 /** 0→1 over [a, b] seconds, clamped, then eased. */
 export const T = (t, a, b, ease = (x) => x) => ease(clamp(0, 1, progress(a, b, t)));

@@ -7,7 +7,7 @@
 //   streak.setSource(fromRgb);                       // optional: take the band colours from this picture
 //   out = streak.frame(t, fromRgb, toRgb);           // 0 ≤ t ≤ streak.duration
 
-export const STREAK_TIMING = { out: 0.45, hold: 0.25, in: 0.42 };
+const STREAK_TIMING = { out: 0.45, hold: 0.25, in: 0.42 };
 
 const lcg = (seed) => () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
@@ -16,7 +16,7 @@ const cubicOut = (x) => 1 - (1 - x) ** 3;
 const cubicInOut = (x) => (x < 0.5 ? 4 * x ** 3 : 1 - (-2 * x + 2) ** 3 / 2);
 
 /** Band colours of a picture: each row from a few columns around its busiest column, softened vertically. */
-export function streakTexture(rgb, width, height, seed = 7) {
+function streakTexture(rgb, width, height, seed = 7) {
   let col = Math.round(width / 2), best = -1;
   for (let x = Math.round(width * 0.1); x < width * 0.9; x += 4) {
     let sum = 0, sq = 0, n = 0;
@@ -42,7 +42,8 @@ export function streakTexture(rgb, width, height, seed = 7) {
   const rnd = lcg(seed), bandOf = new Int16Array(height), bands = [];
   for (let y = 0; y < height;) {
     const h = 2 + Math.floor(rnd() * 14);
-    bands.push({ delay: rnd() * 0.24, dur: 0.1 + rnd() * 0.2, outDelay: rnd() * 0.2, outDur: 0.1 + rnd() * 0.12, hot: rnd() < 0.25 ? 1.5 + rnd() * 0.6 : 1, phase: rnd() * 6.28 });
+    bands.push({ delay: rnd() * 0.24, dur: 0.1 + rnd() * 0.2, outDelay: rnd() * 0.2, outDur: 0.1 + rnd() * 0.12,
+      hot: rnd() < 0.25 ? 1.5 + rnd() * 0.6 : 1, phase: rnd() * 6.28 });
     for (let k = 0; k < h && y < height; k++, y++) bandOf[y] = bands.length - 1;
   }
   return { rows: soften(1), glow: soften(28), bandOf, bands };

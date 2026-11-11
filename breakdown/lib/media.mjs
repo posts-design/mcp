@@ -10,7 +10,7 @@ import { clamp } from "./ease.mjs";
 import { COLOR, WINDOW } from "./layout.mjs";
 
 const run = (cmd, args, opts) => execFileSync(cmd, args, { maxBuffer: 256 * 1024 ** 2, ...opts });
-export const AUDIO = /\.(mp3|wav|flac|m4a|ogg)$/i;
+const AUDIO = /\.(mp3|wav|flac|m4a|ogg)$/i;
 /** The audio files in a folder, by name. */
 export const audioFiles = (dir) => readdirSync(dir).filter((f) => AUDIO.test(f));
 export const isUrl = (s) => /^https?:\/\//i.test(s);
@@ -68,6 +68,7 @@ export function probe(file) {
  */
 function cached(dir, fill) {
   if (existsSync(path.join(dir, "done"))) return dir;
+  clearStale(path.dirname(dir), `${path.basename(dir)}.part-`);
   const tmp = `${dir}.part-${process.pid}`;
   rmSync(tmp, { recursive: true, force: true });
   mkdirSync(tmp, { recursive: true });
@@ -93,6 +94,18 @@ export async function filmFrames(src, info, cacheDir, { decode = true, ground = 
   return (t) => path.join(dir, `${String(clamp(0, count - 1, Math.floor(t * info.fps + 1e-6)) + 1).padStart(5, "0")}.jpg`);
 }
 
+/** True while a process with this id runs (a stale scratch folder's owner, for instance). */
+const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { return e.code === "EPERM"; } };
+
+/** Removes `<prefix><pid>…` folders in `dir` left by processes that have stopped (a killed render, say). */
+export function clearStale(dir, prefix) {
+  if (!existsSync(dir)) return;
+  for (const name of readdirSync(dir)) {
+    const pid = Number(/^(\d+)/.exec(name.slice(prefix.length))?.[1]);
+    if (name.startsWith(prefix) && pid && !alive(pid)) rmSync(path.join(dir, name), { recursive: true, force: true });
+  }
+}
+
 /** A stem's file in the stems folder, whatever its audio format. */
 export function stemFile(dir, stem) {
   const found = audioFiles(dir).filter((f) => path.parse(f).name === stem);
@@ -101,7 +114,7 @@ export function stemFile(dir, stem) {
   return path.join(dir, found[0]);
 }
 
-export const ENVELOPE_HOP = 0.01;
+const ENVELOPE_HOP = 0.01;
 /** A stem's loudness every 10 ms (RMS), scaled so its 99th percentile is 1 and clipped there. */
 export function envelope(file) {
   const raw = run("ffmpeg", ["-v", "error", "-i", file, "-ac", "1", "-ar", "22050", "-f", "f32le", "-"]);
@@ -128,7 +141,8 @@ export function envelopeRms(e, a, b) {
 /** `length` seconds of a post from `from`, at `fps` and twice the row height, for an end-scene tile. */
 export async function tileFrames(file, { from, length, fps, rowH, cacheDir, decode = true, defaultFrom }) {
   const dir = path.join(cacheDir, `tiles-${await sha12(file)}-${rowH}${from === defaultFrom ? "" : `-${from}`}`);
-  if (decode) cached(dir, (d) => run("ffmpeg", ["-v", "error", "-y", "-ss", String(from), "-t", String(length), "-i", file, "-vf", `fps=${fps},scale=-2:${rowH * 2}:flags=lanczos`, "-q:v", "2", path.join(d, "%04d.jpg")]));
+  if (decode) cached(dir, (d) => run("ffmpeg", ["-v", "error", "-y", "-ss", String(from), "-t", String(length), "-i", file,
+    "-vf", `fps=${fps},scale=-2:${rowH * 2}:flags=lanczos`, "-q:v", "2", path.join(d, "%04d.jpg")]));
   return { dir, frames: jpegs(dir) };
 }
 
@@ -140,7 +154,8 @@ export async function darkSeconds({ dir, frames }, fps) {
 }
 
 /** Where a post given as a link is kept once downloaded. */
-export const postCacheFile = (url, cacheDir) => path.join(cacheDir, "posts", createHash("sha256").update(url).digest("hex").slice(0, 16) + (path.extname(new URL(url).pathname) || ".mp4"));
+export const postCacheFile = (url, cacheDir) =>
+  path.join(cacheDir, "posts", createHash("sha256").update(url).digest("hex").slice(0, 16) + (path.extname(new URL(url).pathname) || ".mp4"));
 
 /** A post given as a link is downloaded once, into the cache on this machine; a file is resolved against `base`. */
 export async function localPost(fileOrUrl, base, cacheDir) {
@@ -148,7 +163,9 @@ export async function localPost(fileOrUrl, base, cacheDir) {
   const file = postCacheFile(fileOrUrl, cacheDir), part = `${file}.part`;
   if (existsSync(file)) return file;
   mkdirSync(path.dirname(file), { recursive: true });
-  const res = await fetch(fileOrUrl, { signal: AbortSignal.timeout(120_000) });
+  let res;
+  try { res = await fetch(fileOrUrl, { signal: AbortSignal.timeout(120_000) }); }
+  catch (e) { throw new Error(`could not download ${fileOrUrl}: ${e.cause?.message ?? e.message}`); }
   if (!res.ok) throw new Error(`could not download ${fileOrUrl}: HTTP ${res.status}`);
   writeFileSync(part, Buffer.from(await res.arrayBuffer()));
   // a page or a sign-in wall comes back 200 too: keep the file only if it is a video

@@ -117,17 +117,6 @@ reads it makes use credits as usual.
 | `competitor_audit` | A brand | Its launches: recurring patterns, what changed, what to borrow |
 | `launch_video_direction` | Your product, and a length | A beat-by-beat plan for a launch video, from real ones |
 
-## Sound breakdown kit
-
-[![A sound breakdown: the film above an editor's timeline of itself](breakdown/example/preview.webp)](breakdown/)
-
-[`breakdown/`](breakdown/) turns any film you give it into a sound breakdown: the film plays over an editor's
-timeline of itself, with a filmstrip of its shots and one audio track per stem of its mix. Stems, words and shots
-are measured on your machine and the film renders without a browser. The
-[sound-breakdown skill](skills/sound-breakdown/SKILL.md) walks an agent from the film to the finished breakdown:
-for Claude Code, `cp -r skills/sound-breakdown ~/.claude/skills/`. MIT licensed, and provided
-[as is](breakdown/README.md#licence).
-
 ## What it can and can't do
 
 - It reads the published library and your own Saves, and changes your Saves only when you ask.
@@ -135,6 +124,17 @@ for Claude Code, `cp -r skills/sound-breakdown ~/.claude/skills/`. MIT licensed,
   (`references:read`, `saved:read`, `saved:write`).
 - Saving and removing are free, and each one is logged on your account.
 - Results credit each post's brand and creator.
+
+## Sound breakdown kit
+
+[![A sound breakdown: the film above an editor's timeline of itself](breakdown/example/preview.webp)](breakdown/)
+
+[`breakdown/`](breakdown/) turns any film you give it into a sound breakdown: the film plays over an editor's
+timeline of itself, with a filmstrip of its shots and one audio track per stem of its mix. Stems, words and shots
+are measured on your machine (or by ElevenLabs with your own key) and the film renders without a browser. The
+[sound-breakdown skill](skills/sound-breakdown/SKILL.md) walks an agent from the film to the finished breakdown:
+for Claude Code, `cp -r skills/sound-breakdown ~/.claude/skills/`. MIT licensed, and provided
+[as is](breakdown/README.md#licence).
 
 ## Help
 

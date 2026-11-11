@@ -44,6 +44,7 @@ export function timelineLayout(laneCount) {
   tl.laneY = (i) => tl.audio0 + i * (tl.laneH + tl.gap);
   tl.bottom = tl.laneY(laneCount - 1) + tl.laneH;
   tl.playhead = tl.x0 + Math.round((tl.x1 - tl.x0) * SCROLL.playhead);
+  tl.thumbW = Math.round(tl.videoH * WINDOW.w / WINDOW.h);   // a filmstrip thumbnail, the window's shape at V1's height
   return tl;
 }
 

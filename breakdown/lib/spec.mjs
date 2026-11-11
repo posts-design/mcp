@@ -2,13 +2,14 @@
 // use directly; it is pure, so every rule here is tested (test/spec.test.mjs). Field reference: README.md.
 import { placeholders } from "./draft.mjs";
 import { MAX_LANES } from "./layout.mjs";
+import { HOLD } from "./timing.mjs";
 
 const RULERS = ["bars", "seconds"];
 const ASPECTS = ["4:5", "9:16"];
 const MARK_KEYS = ["black", "white"];
 const KNOWN = new Set(["source", "stems", "cover", "bpm", "barAnchor", "ruler", "gainDb", "aspect", "avatar", "markKey", "url",
   "pullBack", "hold", "acts", "shots", "transitions", "lanes", "end"]);
-export const MIN_END_POSTS = 3;
+const MIN_END_POSTS = 3;
 
 const isNum = (v) => typeof v === "number" && Number.isFinite(v);
 const isText = (v) => typeof v === "string" && v.trim() !== "";
@@ -43,7 +44,7 @@ export function parseSpec(raw) {
     avatar: optional("avatar", isText, "an image of the brand's mark", null),
     markKey: optional("markKey", (v) => MARK_KEYS.includes(v), `one of ${MARK_KEYS.join(", ")}`, "black"),
     pullBack: need("pullBack", (v) => isNum(v) && v > 0, "the second the timeline pulls back"),
-    hold: optional("hold", (v) => isNum(v) && v >= 0 && v <= 10, "seconds, 0–10", undefined),
+    hold: optional("hold", (v) => isNum(v) && v >= 0 && v <= 10, "seconds, 0–10", HOLD),
     transitions: optional("transitions", (v) => Array.isArray(v) && v.every((t) => isNum(t) && t > 0), "a list of seconds", []),
   };
 

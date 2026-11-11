@@ -9,9 +9,14 @@ wall of the brand's other posts.
 *Eight seconds of a breakdown of Rockstar Games' GTA VI pre-loading post, made with this kit. Its
 [spec](breakdown.example.json) is shown for its fields; the film, stems and posts it names are not included.*
 
-The kit separates the stems, transcribes the words and finds the shots and tempo on your machine, then drafts a spec
-for you or your agent to name. It renders with Node, sharp and ffmpeg, no browser. It was built at
-[posts.design](https://posts.design) for our own breakdowns and is free to use.
+The kit separates the stems, transcribes the words and finds the shots and tempo on your machine (or with ElevenLabs,
+when you give it your key), then drafts a spec for you or your agent to name. It renders with Node, sharp and ffmpeg,
+no browser. It was built at [posts.design](https://posts.design) for our own breakdowns and is free to use.
+
+Use any film you're comfortable breaking down and posting. The layout is built for 16:9 films; a square or vertical
+one plays as a narrower picture in the window. Breakdowns read best on a designed film with music cut to picture and a
+few distinct layers, such as a launch film, product film or ad. UI recordings, voice-over alone and loops have less to
+show.
 
 ## Quick start
 
@@ -52,11 +57,6 @@ what to install. Sizes are for Linux; a Mac's PyTorch is smaller.
 With an ElevenLabs key and `--stems elevenlabs`, numpy is all the Python you install. Rendering needs no Python; see
 **Speed** below for its memory and cache.
 
-Use any film you're comfortable breaking down and posting. The layout is built for 16:9 films; a square or vertical
-one plays as a narrower picture in the window. Breakdowns read best on a designed film with music cut to picture and a
-few distinct layers, such as a launch film, product film or ad. UI recordings, voice-over alone and loops have less to
-show.
-
 ## What prep makes
 
 `prep.mjs` needs a film with its own sound. It writes into the folder:
@@ -68,6 +68,7 @@ show.
 | `prep/shots.jpg` | each candidate shot's middle frame with its number and start; "soft" marks a boundary found by a slower change (a whip pan, a match move) |
 | `prep/stems.png` | every stem's spectrogram on one time axis, with the cuts over it |
 | `prep/words.txt` | the words heard on the vocal stem with their times; `?` marks words to check by ear |
+| `prep/words.json` | the same words as the transcriber gave them, which a rerun reuses; delete it to transcribe again |
 | `prep/analysis.json` | the raw measurements: cuts, tempo, each stem's activity and loudness |
 | `breakdown.json` | the draft spec: every shot, clip and act timed, with placeholder names |
 
@@ -83,7 +84,7 @@ post.
    the detector missed (step through suspect stretches frame by frame). A camera move that never cuts is one shot: V1
    shows edits, not camera moves. Name each shot in two or three words for what it shows. Add a `transitions` tab only
    where the frames show a dissolve or wipe.
-2. **Acts.** Group the shots into 6 to 10 acts, named from the film's own on-screen words where it has them. The
+2. **Acts.** Group the shots into 5 to 10 acts, named from the film's own on-screen words where it has them. The
    footer shows the playing act, numbered.
 3. **Tracks.** Listen to each stem against the picture with `prep/stems.png` open. Keep the four or five stems that
    carry something, rename them for a listener (Drums, Bass, Synths & FX), and merge or split the drafted clips. Name
@@ -109,7 +110,7 @@ post.
 | **Dialogue and Song vocal** | When a film has both a song with vocals and spoken lines, give them two lanes from the same vocal stem: `Dialogue` (characters, a phone or PA, the announcer as `VO:`) and `Song vocal`. Split by what each line is. |
 | **Ruler** | `"ruler": "bars"` (the default: bar numbers and beat ticks from `bpm` and `barAnchor`) or `"seconds"` (for songs edited to picture; `bpm` is then optional). |
 | **Excerpt** | For networks that cap a video at 60 s: `node excerpt.mjs work/breakdown.json cut/ --from 36.9 --pull 75 --to 82`, in seconds of the full film, writes `cut/` with its own trimmed film, stems and spec. Start on an edit and a line. Pull back at most 52 s after `--from`, which leaves room for the end scene. The sound runs on to `--to` under the end scene and fades over the last `--fade` seconds (default 1.2). |
-| **End scene** | `"end": { "line": ["Every Acme post,", "in one place."], "posts": [...] }`: at least 3 of the brand's other videos, and 8 to 12 fill the wall best. Each is a file, a link (downloaded when you render) or `[file or link, from]`. A tile plays 8 s, from 1 s in unless you give `from`; render warns about short or dark ones. The scene starts at `pullBack` + 1.5 s + `hold`. Leave `end` out and the film ends on the whole film. |
+| **End scene** | `"end": { "line": ["Every Acme post,", "in one place."], "posts": [...] }`: at least 3 of the brand's other videos, and 7 to 12 fill the wall best. Each is a file, a link (downloaded when you render) or `[file or link, from]`. A tile plays 8 s, from 1 s in unless you give `from`; render warns about short or dark ones. The scene starts at `pullBack` + 1.5 s + `hold`. Leave `end` out and the film ends on the whole film. |
 | **Brand mark** | `prep.mjs --avatar logo.png`, or `"avatar"` in the spec, shows the brand's mark bottom right. `"markKey": "white"` turns a black mark on white into a white mark; the default, `"black"`, keys a colour mark off black. |
 | **Loudness** | The film's own mix, limited to −1.5 dBTP. Render prints the loudness and suggests `"gainDb"` (−24 to 12) when the mix is louder than −15 LUFS. |
 | **Speed** | `render.mjs --jobs 4` renders on four processes (each needs about 2 GB of memory); the film is the same whatever the number. Decoded frames and render scratch go to `~/.cache/sound-breakdown` (`~/Library/Caches` on a Mac; `--cache <dir>` to move them). They take a few GB per minute of film; delete the folder whenever you like. |
@@ -117,7 +118,8 @@ post.
 ## Spec reference
 
 Paths are relative to the spec's folder. Times are seconds in the film. Render checks the spec first and lists every
-problem at once.
+problem at once, then checks that the film, every stem a lane draws and the end scene's posts are there before it
+decodes anything.
 
 | Field | Meaning |
 |---|---|
@@ -143,7 +145,7 @@ When the film is in the [posts.design](https://posts.design) library, the [posts
 your agent a head start. `get_video_scenes` lists its scenes with times, a shot list to check against
 `prep/shots.jpg`, and `get_video_breakdown` names its beats, which are acts in waiting; both come with Pro.
 `search_references` with `brand` and `format: "video"` lists the brand's other videos for the end scene: put the
-`video.url` of those whose `role` is `analysis` into `end.posts`, leaving out the film itself.
+`video.url` of those whose `video.role` is `analysis` into `end.posts`, leaving out the film itself.
 
 To have an agent do all of this, copy the [sound-breakdown skill](../skills/sound-breakdown/SKILL.md) into your
 agent's skills (`cp -r skills/sound-breakdown ~/.claude/skills/` for Claude Code).
@@ -164,7 +166,9 @@ agent's skills (`cp -r skills/sound-breakdown ~/.claude/skills/` for Claude Code
 
 Each frame is one SVG drawn from its time alone and rasterised by sharp, so frames can render in any order on
 several processes and still give the same film, byte for byte, for a given sharp and ffmpeg. `npm test` checks the
-spec, timing, layout, draft, excerpt, end-scene and render-split logic.
+spec, timing, layout, draft, excerpt, end-scene and render-split logic, and that `package.json`'s `files` lists
+everything the kit needs. A script can import `render()` from `render.mjs`; its one drawing hook, `lockup`, draws a
+mark under the end scene's wall (posts.design draws its own lockup there; this kit draws none).
 
 ## Licence
 
