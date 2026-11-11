@@ -1,0 +1,3 @@
+# Words heard on this machine; not needed when the vocal stem is silent, with ELEVENLABS_API_KEY set (prep then uses
+# Scribe), or with --words none. Sizes: the README's "What it downloads".
+faster-whisper==1.2.1

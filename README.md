@@ -11,8 +11,9 @@ posts from top brands and their designers: launch videos, carousels, OG images a
 - **About:** [posts.design/mcp](https://posts.design/mcp)
 
 This repository holds the server's documentation, its
-[MCP Registry](https://registry.modelcontextprotocol.io) listing (`design.posts/mcp`) and its
-Antigravity and Cursor plugins. The server itself is hosted by posts.design and is not open source.
+[MCP Registry](https://registry.modelcontextprotocol.io) listing (`design.posts/mcp`), its
+Antigravity and Cursor plugins, and the open-source [sound breakdown kit](#sound-breakdown-kit).
+The server itself is hosted by posts.design and is not open source.
 
 ## Set up
 
@@ -91,7 +92,7 @@ Once connected, ask your agent to call `get_my_access` to confirm.
 | `save_reference` | Save reference | Save a post, OG image or X header to your Saves, when you ask | Free |
 | `unsave_reference` | Remove from Saves | Remove one reference from your Saves, when you ask | Free |
 | `get_my_access` | My access and credits | Show what this connection may read and how many credits are left | Free |
-| `list_playbooks` | List launch playbooks | List the formats for a launch film, with when to use each and its runtime | Free |
+| `list_playbooks` | List launch playbooks | List the formats for a launch film or a raise announcement, with when to use each and its runtime | Free |
 | `get_video_breakdown` | Video breakdown | How a video is directed: structure, hook, timed beats, type, colour, end card and what to borrow, each tied to a still | Pro |
 | `get_video_scenes` | Video scenes | Every scene of a video with its time range, stills and the beats over it | Pro |
 | `get_scene_frames` | Scene frames | Stills across one scene, as images in time order | Pro |
@@ -116,6 +117,17 @@ reads it makes use credits as usual.
 | `competitor_audit` | A brand | Its launches: recurring patterns, what changed, what to borrow |
 | `launch_video_direction` | Your product, and a length | A beat-by-beat plan for a launch video, from real ones |
 
+## Sound breakdown kit
+
+[![A sound breakdown: the film above an editor's timeline of itself](breakdown/example/preview.webp)](breakdown/)
+
+[`breakdown/`](breakdown/) turns any film you give it into a sound breakdown: the film plays over an editor's
+timeline of itself, with a filmstrip of its shots and one audio track per stem of its mix. Stems, words and shots
+are measured on your machine and the film renders without a browser. The
+[sound-breakdown skill](skills/sound-breakdown/SKILL.md) walks an agent from the film to the finished breakdown:
+for Claude Code, `cp -r skills/sound-breakdown ~/.claude/skills/`. MIT licensed, and provided
+[as is](breakdown/README.md#licence).
+
 ## What it can and can't do
 
 - It reads the published library and your own Saves, and changes your Saves only when you ask.
@@ -128,5 +140,5 @@ reads it makes use credits as usual.
 
 Open an [issue](https://github.com/posts-design/mcp/issues).
 
-Documentation in this repository is MIT licensed; the posts.design name and logo are not. The posts
-in the library belong to their creators.
+Documentation and the breakdown kit in this repository are MIT licensed; the posts.design name and
+logo are not. The posts in the library belong to their creators.

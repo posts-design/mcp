@@ -1,0 +1,110 @@
+{
+  "_note": "The spec behind the example: Rockstar Games’ GTA VI pre-loading post. Dialogue and Song vocal are two lanes drawn from the same vocal stem; the end scene plays windows of the brand’s other posts.",
+  "source": "film.mp4",
+  "stems": "stems",
+  "avatar": "avatar.png",
+  "cover": 7.4,
+  "bpm": 112,
+  "barAnchor": 6.18,
+  "gainDb": -2,
+  "pullBack": 24.4,
+  "hold": 0.6,
+  "acts": [
+    { "start": 0, "title": "Love what you're doing to me" },
+    { "start": 6.1, "title": "Party hard" },
+    { "start": 10.533, "title": "Love how you're making me feel" },
+    { "start": 14.7, "title": "Pre-load now" },
+    { "start": 21.933, "title": "November 19, 2026" }
+  ],
+  "shots": [
+    [0, 0.5, "PlayStation logo"],
+    [0.5, 2, "PS5 bundle card"],
+    [2, 4.533, "Club lights"],
+    [4.533, 6.1, "Racer backflip"],
+    [6.1, 8.367, "Logo over a car"],
+    [8.367, 9.433, "Bucket hat"],
+    [9.433, 10.533, "Scuffle"],
+    [10.533, 12, "Yacht"],
+    [12, 12.733, "DJ booth"],
+    [12.733, 13.467, "Red-lit booth"],
+    [13.467, 14.7, "Dark balcony"],
+    [14.7, 16.9, "Pre-load now"],
+    [16.9, 17.9, "Waterfront doorway"],
+    [17.9, 18.933, "Backfiring car"],
+    [18.933, 21.933, "Dance floor"],
+    [21.933, 24.9, "Date card"],
+    [24.9, 27.967, "Rockstar mark"],
+    [27.967, 29.067, "Play has no limits"],
+    [29.067, 29.967, "PlayStation shapes"]
+  ],
+  "transitions": [21.933, 24.9, 29.067],
+  "lanes": [
+    {
+      "name": "Dialogue",
+      "stem": "vocals",
+      "clips": [
+        [4.16, 4.9, "Backflip time"],
+        [4.94, 5.48, "Here we go. Two"],
+        [8.4, 10.06, "I mean, it's not really my thing"],
+        [16.5, 17.94, "It is so on now"],
+        [20.08, 20.3, "Hey"],
+        [20.98, 22.02, "VO: Grand Theft Auto VI"],
+        [23.02, 24.12, "VO: Coming November 19th"],
+        [24.28, 25.42, "VO: Rated M for Mature"],
+        [28.62, 29.32, "VO: PlayStation"]
+      ]
+    },
+    {
+      "name": "Song vocal",
+      "stem": "vocals",
+      "clips": [
+        [2.16, 3.98, "Love what you're doing to me"],
+        [5.5, 6.7, "Lyric unclear"],
+        [6.82, 8.12, "Party hard, I party hard"],
+        [10.72, 12.64, "Love how you're making me feel"],
+        [12.88, 14.9, "But you got something to hide"],
+        [14.9, 16.46, "Party hard, I party hard"],
+        [17.98, 19.5, "Yeah, party hard, I party"],
+        [22.04, 22.98, "Lyric unclear"],
+        [25.5, 27.34, "Party hard, I party"]
+      ]
+    },
+    {
+      "name": "Drums",
+      "stem": "drums",
+      "clips": [
+        [6.14, 22.98, "Four on the floor"],
+        [23.3, 28, "Four on the floor"]
+      ]
+    },
+    {
+      "name": "Bass",
+      "stem": "bass",
+      "clips": [
+        [6.2, 28.2, "Pumping bass"]
+      ]
+    },
+    {
+      "name": "Synths & FX",
+      "stem": "other",
+      "clips": [
+        [0.03, 0.51, "Logo sting"],
+        [5.95, 7, "Synth swell"],
+        [10.25, 12, "Synth swell"],
+        [17.75, 19.25, "Synth swell"]
+      ]
+    }
+  ],
+  "end": {
+    "line": ["Every Rockstar post,", "in one place."],
+    "posts": [
+      ["posts/rockstar-1.mp4", 2],
+      ["posts/rockstar-2.mp4", 12],
+      ["posts/rockstar-3.mp4", 14],
+      ["posts/rockstar-4.mp4", 4],
+      ["posts/rockstar-1.mp4", 7],
+      ["posts/rockstar-2.mp4", 20],
+      ["posts/rockstar-4.mp4", 13]
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+# Stem separation on this machine, prep's default; not needed with --stems elevenlabs or --stems <folder>. Install it
+# with the CPU-only PyTorch, leaving the index out only for the CUDA build on Linux with an NVIDIA GPU:
+#   pip install -r py/requirements-demucs.txt --extra-index-url https://download.pytorch.org/whl/cpu
+# Sizes: the README's "What it downloads".
+demucs==4.1.0
