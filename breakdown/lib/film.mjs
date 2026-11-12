@@ -4,7 +4,8 @@
 import sharp from "sharp";
 import { clamp } from "./ease.mjs";
 import { createEndScene } from "./end-scene.mjs";
-import { COLOR, FOOTER, FRAME, WINDOW, timelineLayout } from "./layout.mjs";
+import { FOOTER, FRAME, WINDOW, palette, pictureRect, timelineLayout } from "./layout.mjs";
+import { createLight } from "./light.mjs";
 import { envelope, filmFrames, probe, stemFile } from "./media.mjs";
 import { createStreak } from "./streak.mjs";
 import { createTimeline } from "./timeline.mjs";
@@ -18,10 +19,15 @@ import path from "node:path";
 export async function createBreakdown(spec, { base, cacheDir, decode = true, log = console.log, lockup = null }) {
   const { width: W, height: H } = FRAME;
   const source = path.resolve(base, spec.source), info = probe(source), duration = info.duration;
-  const frameFile = await filmFrames(source, info, cacheDir, { decode, ground: COLOR.ground });
+  const colors = palette(spec.style), lit = spec.style?.light > 0;   // with the light, only the picture is kept
+  const frameFile = await filmFrames(source, info, cacheDir, { decode, ground: colors.ground });
 
-  // the post in its rounded window
-  const mask = Buffer.from(`<svg width="${WINDOW.w}" height="${WINDOW.h}"><rect width="${WINDOW.w}" height="${WINDOW.h}" rx="${WINDOW.r}" fill="#fff"/></svg>`);
+  // the post in its rounded window; with the ambient light only the picture is kept, so the light shows in the bars
+  // beside a narrower one
+  const pic = lit ? pictureRect(info.width, info.height) : { x: 0, y: 0, w: WINDOW.w, h: WINDOW.h };
+  const mask = Buffer.from(`<svg width="${WINDOW.w}" height="${WINDOW.h}"><rect x="${pic.x}" y="${pic.y}" width="${pic.w}" height="${pic.h}" rx="${WINDOW.r}" fill="#fff"/></svg>`);
+  const rect = { x: WINDOW.x + pic.x, y: WINDOW.y + pic.y, w: pic.w, h: pic.h };
+  const light = lit ? await createLight({ frames: frameFile, pic, rect, fps: info.fps, width: W, strength: spec.style.light, decode }) : null;
   // raw pixels go straight into the frame's composite, with no PNG encode and decode in between
   const videoAt = (t) => sharp(frameFile(t)).ensureAlpha().composite([{ input: mask, blend: "dest-in" }]).raw().toBuffer();
   // the filmstrip's thumbnails, made as the timeline needs them
@@ -38,26 +44,29 @@ export async function createBreakdown(spec, { base, cacheDir, decode = true, log
 
   const { pull, streakAt } = schedule(spec, duration);
   const view = createView({ duration, pull, tl });
-  const timeline = await createTimeline({ spec, tl, view, duration, pull, thumbAt, envelopes });
+  const timeline = await createTimeline({ spec, tl, view, duration, pull, thumbAt, envelopes, colors });
   const mark = spec.avatar ? await brandMark(path.resolve(base, spec.avatar), spec.markKey) : null;
 
   async function breakdownAt(t) {
-    const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">`
-      + `<rect x="${WINDOW.x - 0.75}" y="${WINDOW.y - 0.75}" width="${WINDOW.w + 1.5}" height="${WINDOW.h + 1.5}" `
-      + `rx="${WINDOW.r + 0.75}" fill="none" stroke="${COLOR.line}" stroke-width="1.5"/>`
-      + (await timeline.svg(t)) + timeline.footer(t) + `</svg>`;
-    return sharp({ create: { width: W, height: H, channels: 3, background: COLOR.ground } }).composite([
-      { input: await videoAt(Math.min(t, duration - 0.001)), raw: { width: WINDOW.w, height: WINDOW.h, channels: 4 }, left: WINDOW.x, top: WINDOW.y },
+    // the window's outline, or with the light a faint hairline on the picture's own edge
+    const edge = lit ? `<rect x="${rect.x + 0.5}" y="${rect.y + 0.5}" width="${rect.w - 1}" height="${rect.h - 1}" rx="${WINDOW.r - 0.5}" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1"/>`
+      : `<rect x="${WINDOW.x - 0.75}" y="${WINDOW.y - 0.75}" width="${WINDOW.w + 1.5}" height="${WINDOW.h + 1.5}" `
+      + `rx="${WINDOW.r + 0.75}" fill="none" stroke="${colors.line}" stroke-width="1.5"/>`;
+    const svg = `<svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">` + edge + (await timeline.svg(t)) + timeline.footer(t) + `</svg>`;
+    const tv = Math.min(t, duration - 0.001), [video, glow] = await Promise.all([videoAt(tv), light?.at(tv)]);
+    return sharp({ create: { width: W, height: H, channels: 3, background: colors.ground } }).composite([
+      ...(glow ? [glow] : []),
+      { input: video, raw: { width: WINDOW.w, height: WINDOW.h, channels: 4 }, left: WINDOW.x, top: WINDOW.y },
       { input: Buffer.from(svg), left: 0, top: 0 },
       ...(mark ? [{ input: mark.png, left: tl.x1 - mark.w, top: Math.round(FOOTER.y - FOOTER.size * 0.36 - mark.h / 2) }] : []),
     ]).removeAlpha().raw().toBuffer();
   }
 
-  if (!spec.end) return { duration, total: streakAt, info, frameAt: breakdownAt };
+  if (!spec.end) return { duration, total: streakAt, info, colors, frameAt: breakdownAt };
 
   // The held whole-post frame streaks out; the end scene comes in under it.
   const streak = createStreak({ width: W, height: H, seed: 11 });
-  const endScene = await createEndScene({ end: spec.end, base, cacheDir, decode, log, start: streakAt, revealAt: streakAt + streak.duration, lockup });
+  const endScene = await createEndScene({ end: spec.end, base, cacheDir, decode, log, start: streakAt, revealAt: streakAt + streak.duration, lockup, ground: colors.ground });
   let held = null;
   async function frameAt(t) {
     if (t < streakAt) return breakdownAt(t);
@@ -67,7 +76,7 @@ export async function createBreakdown(spec, { base, cacheDir, decode = true, log
     const e = t - streakAt, shown = e >= streak.timing.out + streak.timing.hold;
     return streak.frame(e, held, shown ? await endScene.frame(t) : null);
   }
-  return { duration, total: endScene.end, info, frameAt };
+  return { duration, total: endScene.end, info, colors, frameAt };
 }
 
 /**

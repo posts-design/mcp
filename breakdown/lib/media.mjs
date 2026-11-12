@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import sharp from "sharp";
 import { clamp } from "./ease.mjs";
-import { COLOR, WINDOW } from "./layout.mjs";
+import { COLOR, WINDOW, isWide } from "./layout.mjs";
 
 const run = (cmd, args, opts) => execFileSync(cmd, args, { maxBuffer: 256 * 1024 ** 2, ...opts });
 const AUDIO = /\.(mp3|wav|flac|m4a|ogg)$/i;
@@ -66,7 +66,7 @@ export function probe(file) {
  * Runs `fill` once for a cache folder. It fills a private folder that is renamed into place when complete, so a
  * killed run leaves nothing half-written and two renders of the same film never read each other's partial frames.
  */
-function cached(dir, fill) {
+export function cached(dir, fill) {
   if (existsSync(path.join(dir, "done"))) return dir;
   clearStale(path.dirname(dir), `${path.basename(dir)}.part-`);
   const tmp = `${dir}.part-${process.pid}`;
@@ -84,14 +84,19 @@ const jpegs = (dir) => readdirSync(dir).filter((f) => f.endsWith(".jpg")).sort()
  * window on the ground. `frameAt(t)` gives the file for post time t. Workers pass `decode: false` and only read.
  */
 export async function filmFrames(src, info, cacheDir, { decode = true, ground = COLOR.ground } = {}) {
-  const wide = Math.abs(info.width / info.height - 16 / 9) < 0.01;
-  const dir = path.join(cacheDir, `${await sha12(src)}-${WINDOW.w}${wide ? "" : "-fit"}`);
+  const wide = isWide(info.width, info.height);
+  // the bars around a fitted picture are the ground's colour, so a styled ground decodes its own copy
+  const tint = ground === COLOR.ground ? "" : `-${ground.slice(1)}`;
+  const dir = path.join(cacheDir, `${await sha12(src)}-${WINDOW.w}${wide ? "" : `-fit${tint}`}`);
   const scale = wide ? `scale=${WINDOW.w}:${WINDOW.h}:flags=lanczos`
-    : `scale=${WINDOW.w}:${WINDOW.h}:force_original_aspect_ratio=decrease:flags=lanczos,pad=${WINDOW.w}:${WINDOW.h}:(ow-iw)/2:(oh-ih)/2:color=${ground}`;
+    // full-resolution colour before the pad: in 4:2:0 the pad rounds the window's odd 563 px height down and refuses
+    : `scale=${WINDOW.w}:${WINDOW.h}:force_original_aspect_ratio=decrease:flags=lanczos,format=yuv444p,pad=${WINDOW.w}:${WINDOW.h}:(ow-iw)/2:(oh-ih)/2:color=${ground}`;
   if (decode) cached(dir, (d) => run("ffmpeg", ["-v", "error", "-y", "-i", src, "-vf", scale, "-q:v", "1", "-qmin", "1", path.join(d, "%05d.jpg")]));
   const count = jpegs(dir).length;
   if (!count) throw new Error(`no frames decoded from ${src}`);
-  return (t) => path.join(dir, `${String(clamp(0, count - 1, Math.floor(t * info.fps + 1e-6)) + 1).padStart(5, "0")}.jpg`);
+  const byIndex = (i) => path.join(dir, `${String(i + 1).padStart(5, "0")}.jpg`);
+  const frameAt = (t) => byIndex(clamp(0, count - 1, Math.floor(t * info.fps + 1e-6)));
+  return Object.assign(frameAt, { dir, count, byIndex });
 }
 
 /** True while a process with this id runs (a stale scratch folder's owner, for instance). */

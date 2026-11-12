@@ -112,6 +112,7 @@ post.
 | **Excerpt** | For networks that cap a video at 60 s: `node excerpt.mjs work/breakdown.json cut/ --from 36.9 --pull 75 --to 82`, in seconds of the full film, writes `cut/` with its own trimmed film, stems and spec. Start on an edit and a line. Pull back at most 52 s after `--from`, which leaves room for the end scene. The sound runs on to `--to` under the end scene and fades over the last `--fade` seconds (default 1.2). |
 | **End scene** | `"end": { "line": ["Every Acme post,", "in one place."], "posts": [...] }`: at least 3 of the brand's other videos, and 7 to 12 fill the wall best. Each is a file, a link (downloaded when you render) or `[file or link, from]`. A tile plays 8 s, from 1 s in unless you give `from`; render warns about short or dark ones. The scene starts at `pullBack` + 1.5 s + `hold`. Leave `end` out and the film ends on the whole film. |
 | **Brand mark** | `prep.mjs --avatar logo.png`, or `"avatar"` in the spec, shows the brand's mark bottom right. `"markKey": "white"` turns a black mark on white into a white mark; the default, `"black"`, keys a colour mark off black. |
+| **Style** | `"style": { "ground": "#15121a", "accent": "#ef6fa8", "light": true }`, each part optional. `ground` tints the background (window, timeline and end scene); keep it dark. `accent` marks only what is playing now: the playhead, the time, the playing shot's outline and the part of a sounding clip already played. `light` puts an ambient light behind the window, as an ambient-light TV lights the wall: each side glows faintly with the colours at that edge of the picture, led by its darker colours, drifting slowly behind cuts; it fades out before the timeline, is absent for the first 1.5 s and full by 6 s. `true` is the kept strength; a number from above 0 to 3 scales it. A square or vertical film keeps its picture only, so the light fills the window beside it. Pick both colours from the film itself. Leave `style` out for the default look. |
 | **Loudness** | The film's own mix, limited to −1.5 dBTP. Render prints the loudness and suggests `"gainDb"` (−24 to 12) when the mix is louder than −15 LUFS. |
 | **Speed** | `render.mjs --jobs 4` renders on four processes (each needs about 2 GB of memory); the film is the same whatever the number. Decoded frames and render scratch go to `~/.cache/sound-breakdown` (`~/Library/Caches` on a Mac; `--cache <dir>` to move them). They take a few GB per minute of film; delete the folder whenever you like. |
 
@@ -137,6 +138,7 @@ decodes anything.
 | `avatar`, `markKey` | the brand's mark, and `black` or `white` keying |
 | `gainDb` | dB on the film's mix before the limiter |
 | `aspect` | `4:5` (default) or `9:16` |
+| `style` | `{ ground, accent, light }`, each optional: a background colour, an accent for what is playing, and the ambient light (`true` or a strength) |
 | `url`, `_note`, `_…` | anything for your own records |
 
 ## With posts.design
@@ -160,6 +162,7 @@ agent's skills (`cp -r skills/sound-breakdown ~/.claude/skills/` for Claude Code
 | `lib/spec.mjs`, `lib/draft.mjs`, `lib/excerpt.mjs` | reading and checking a spec; drafting one; cutting one down |
 | `lib/timing.mjs`, `lib/layout.mjs` | the film's clock and geometry, as pure functions |
 | `lib/timeline.mjs` | the editor's timeline as SVG: ruler, filmstrip, waveform clips, playhead, acts |
+| `lib/light.mjs` | the ambient light behind the window (`style.light`) |
 | `lib/end-scene.mjs`, `lib/marquee.mjs`, `lib/streak.mjs` | the streak out of the film and the wall of posts |
 | `lib/film.mjs`, `lib/encode.mjs`, `lib/media.mjs` | a frame from a time; frames to H.264 on several processes; ffmpeg reads |
 | `py/analyse.py`, `py/words.py` | shot, tempo and stem measurement; local transcription |

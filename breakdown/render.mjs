@@ -16,7 +16,7 @@ import sharp from "sharp";
 import { readArgs, runCli } from "./lib/cli.mjs";
 import { encodeFrames, isWorker } from "./lib/encode.mjs";
 import { createBreakdown } from "./lib/film.mjs";
-import { COLOR, FRAME, TALL } from "./lib/layout.mjs";
+import { FRAME, TALL } from "./lib/layout.mjs";
 import { defaultCache, localPost, requireTools, stemFile } from "./lib/media.mjs";
 import { parseSpec, warnings } from "./lib/spec.mjs";
 import { requireFont } from "./lib/svg.mjs";
@@ -40,13 +40,13 @@ export async function render({ specFile, out, stills = null, jobs = Math.min(4, 
   if (!worker) { requireTools(); await requireFont(); await preflight(spec, base, cacheDir); }
   const film = await createBreakdown(spec, { base, cacheDir, decode: !worker, log: say, lockup });
   if (!worker) for (const w of warnings(spec, film.duration)) say(`warning: ${w}`);
-  const { width: W, height: H, fps } = FRAME, tall = spec.aspect === "9:16";
+  const { width: W, height: H, fps } = FRAME, tall = spec.aspect === "9:16", ground = film.colors.ground;
 
   if (stills) {
     for (const s of stills) {
       const file = `${out.replace(/\.mp4$/i, "")}-${s}.png`;
       let img = sharp(await film.frameAt(s), { raw: { width: W, height: H, channels: 3 } });
-      if (tall) img = sharp(await img.png().toBuffer()).extend({ top: TALL.top, bottom: TALL.height - H - TALL.top, background: COLOR.ground });
+      if (tall) img = sharp(await img.png().toBuffer()).extend({ top: TALL.top, bottom: TALL.height - H - TALL.top, background: ground });
       await img.png().toFile(file);
       say(file);
     }
@@ -55,7 +55,7 @@ export async function render({ specFile, out, stills = null, jobs = Math.min(4, 
 
   // Frame 0 is the cover (a settled, busy moment, `cover`); playback starts on frame 1, so the sound is delayed a frame.
   const count = Math.round(film.total * fps) + 1, silent = out.replace(/\.mp4$/i, "") + "-silent.mp4";
-  const pad = tall ? ["-vf", `pad=${W}:${TALL.height}:0:${TALL.top}:color=0x${COLOR.ground.slice(1)}`] : [];
+  const pad = tall ? ["-vf", `pad=${W}:${TALL.height}:0:${TALL.top}:color=0x${ground.slice(1)}`] : [];
   await encodeFrames({ count, frameOf: (i) => film.frameAt(i === 0 ? spec.cover : (i - 1) / fps), width: W, height: H, fps, jobs, scratch: cacheDir, log: say,
     outArgs: [...pad, "-c:v", "libx264", "-preset", "slow", "-crf", "16", "-pix_fmt", "yuv420p", "-movflags", "+faststart", "-an", silent] });
   if (!film.info.audio) {

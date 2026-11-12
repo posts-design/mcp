@@ -1,14 +1,16 @@
 // The breakdown spec: one JSON file describes one film. parseSpec checks it and returns it in a form the renderer can
 // use directly; it is pure, so every rule here is tested (test/spec.test.mjs). Field reference: README.md.
 import { placeholders } from "./draft.mjs";
-import { MAX_LANES } from "./layout.mjs";
+import { MAX_LANES, hexRgb } from "./layout.mjs";
 import { HOLD } from "./timing.mjs";
 
 const RULERS = ["bars", "seconds"];
 const ASPECTS = ["4:5", "9:16"];
 const MARK_KEYS = ["black", "white"];
 const KNOWN = new Set(["source", "stems", "cover", "bpm", "barAnchor", "ruler", "gainDb", "aspect", "avatar", "markKey", "url",
-  "pullBack", "hold", "acts", "shots", "transitions", "lanes", "end"]);
+  "pullBack", "hold", "acts", "shots", "transitions", "lanes", "end", "style"]);
+const STYLE_KEYS = ["ground", "accent", "light"];
+const isHex = (v) => typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v);
 const MIN_END_POSTS = 3;
 
 const isNum = (v) => typeof v === "number" && Number.isFinite(v);
@@ -93,6 +95,19 @@ export function parseSpec(raw) {
     }
   }
 
+  spec.style = null;
+  if (raw.style !== undefined) {
+    const s = raw.style;
+    if (!s || typeof s !== "object" || Array.isArray(s)) fail("style: expected { ground, accent, light }, each optional");
+    else {
+      for (const k of Object.keys(s)) if (!STYLE_KEYS.includes(k)) fail(`style: unknown field "${k}" (${STYLE_KEYS.join(", ")})`);
+      for (const k of ["ground", "accent"]) if (s[k] !== undefined && !isHex(s[k])) fail(`style.${k}: expected a colour such as "#15121a"`);
+      const light = s.light === undefined || s.light === false ? 0 : s.light === true ? 1 : isNum(s.light) && s.light > 0 && s.light <= 3 ? s.light : NaN;
+      if (Number.isNaN(light)) fail("style.light: expected true, false or a strength above 0 up to 3 (true is 1)");
+      spec.style = { ground: s.ground?.toLowerCase() ?? null, accent: s.accent?.toLowerCase() ?? null, light: light || 0 };
+    }
+  }
+
   if (problems.length) throw new Error(`spec has ${problems.length} problem${problems.length > 1 ? "s" : ""}:\n  ${problems.join("\n  ")}`);
   return spec;
 }
@@ -109,6 +124,10 @@ export function warnings(spec, duration) {
   spec.shots.forEach((s, i) => past(`shot ${i + 1} "${s.name}"`, s.end));
   spec.lanes.forEach((l) => l.clips.forEach((c) => past(`${l.name} clip "${c.label}"`, c.end)));
   if (spec.cover >= spec.pullBack) out.push("cover is at or after the pull-back, so frame 0 won't show the timeline");
+  if (spec.style?.ground) {
+    const [r, g, b] = hexRgb(spec.style.ground);
+    if (0.2126 * r + 0.7152 * g + 0.0722 * b > 48) out.push(`style.ground ${spec.style.ground} is light; the timeline is drawn for a dark ground`);
+  }
   const left = placeholders(spec);
   if (left) out.push(`${left} names are still prep's placeholders`);
   return out;

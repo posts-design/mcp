@@ -81,3 +81,16 @@ test("times past the film's end, a late cover and placeholder names are warned a
   assert.equal(warnings({ ...s, cover: 25 }, 30).length, 1);
   assert.equal(warnings({ ...s, acts: [{ start: 0, title: PLACEHOLDER.act }] }, 30).length, 1);
 });
+
+test("style is optional; ground and accent are colours, light is on, off or a strength", () => {
+  assert.equal(parseSpec(example()).style, null);
+  const raw = example();
+  raw.style = { ground: "#15121a", accent: "#ef6fa8", light: true };
+  assert.deepEqual(parseSpec(raw).style, { ground: "#15121a", accent: "#ef6fa8", light: 1 });
+  raw.style = { light: 0.5 };
+  assert.deepEqual(parseSpec(raw).style, { ground: null, accent: null, light: 0.5 });
+  raw.style = { ground: "pink", accent: "#ef6fa", light: 9, glow: true };
+  assert.equal(problems(raw).length, 4);
+  raw.style = { ground: "#f0f0f0" };
+  assert.equal(warnings(parseSpec(raw), 30).length, 1);   // a light ground is warned about, not refused
+});

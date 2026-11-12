@@ -50,7 +50,7 @@ export function bestRotation(ratios, layout, seconds, fps = FRAME.fps) {
  * returns `frame(t)` (an rgb24 Buffer) and `end`, the film's last moment. `lockup`, optional, is a mark drawn under
  * the wall: { top (its ink's top in px), svg(t, at) }.
  */
-export async function createEndScene({ end, base, cacheDir, decode, log, start, revealAt, lockup }) {
+export async function createEndScene({ end, base, cacheDir, decode, log, start, revealAt, lockup, ground = COLOR.ground }) {
   const { width: W, height: H, fps } = FRAME;
   const lines = await Promise.all(end.line.map((l) => measureWords(l, END.line)));
   const y1 = END.margin + END.line.size * 0.73, y2 = y1 + END.line.size * END.line.lead;
@@ -79,7 +79,7 @@ export async function createEndScene({ end, base, cacheDir, decode, log, start, 
   const { rotation, apart } = bestRotation(tiles.map((t) => t.ratio), layout, clock.end - start);
   if (decode) log(`end wall: second pass rotated by ${rotation}, copies of a post at least ${Math.round(apart)} px apart`);
   const cards = deal(tiles.length, rotation).map((c, k) => ({ ...c, ratio: tiles[c.i].ratio, href: `@@T${k}@@` }));
-  const marquee = createMarquee({ ...MARQUEE, ...layout, cards });
+  const marquee = createMarquee({ ...MARQUEE, ...layout, cards, ground });
   const uris = new Map();
   const tileUri = (c, e) => {
     const tl = tiles[c.i], idx = (Math.floor((e + c.off * TILE.length) * fps) % tl.n + tl.n) % tl.n, f = `${tl.dir}/${String(idx + 1).padStart(4, "0")}.jpg`;
@@ -93,7 +93,7 @@ export async function createEndScene({ end, base, cacheDir, decode, log, start, 
     body += wordReveal(lines[0], END.margin, y1, t, clock.lines[0]) + (lines[1] ? wordReveal(lines[1], END.margin, y2, t, clock.lines[1]) : "");
     if (lockup) body += lockup.svg(t, clock.lockAt);
     return sharp(Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">`
-      + `<rect width="${W}" height="${H}" fill="${COLOR.ground}"/>${body}</svg>`)).removeAlpha().raw().toBuffer();
+      + `<rect width="${W}" height="${H}" fill="${ground}"/>${body}</svg>`)).removeAlpha().raw().toBuffer();
   }
   return { frame, end: clock.end };
 }

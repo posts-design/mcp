@@ -11,11 +11,11 @@
   "files": [
     "README.md", "LICENSE", ".gitignore", "package.json", "breakdown.example.json", "example/preview.webp", "prep.mjs",
     "render.mjs", "excerpt.mjs", "lib/cli.mjs", "lib/draft.mjs", "lib/ease.mjs", "lib/encode.mjs",
-    "lib/end-scene.mjs", "lib/excerpt.mjs", "lib/film.mjs", "lib/layout.mjs", "lib/marquee.mjs",
+    "lib/end-scene.mjs", "lib/excerpt.mjs", "lib/film.mjs", "lib/layout.mjs", "lib/light.mjs", "lib/marquee.mjs",
     "lib/media.mjs", "lib/spec.mjs", "lib/streak.mjs", "lib/svg.mjs", "lib/timeline.mjs", "lib/timing.mjs",
     "py/analyse.py", "py/requirements.txt", "py/requirements-demucs.txt",
     "py/requirements-whisper.txt", "py/words.py", "test/draft.test.mjs", "test/end-scene.test.mjs",
-    "test/excerpt.test.mjs", "test/layout.test.mjs", "test/package.test.mjs", "test/render.test.mjs",
+    "test/excerpt.test.mjs", "test/layout.test.mjs", "test/light.test.mjs", "test/package.test.mjs", "test/render.test.mjs",
     "test/spec.test.mjs", "test/timing.test.mjs"
   ],
   "scripts": {

@@ -21,6 +21,32 @@ export const COLOR = {
 /** The post's window. A source of another shape is fitted inside it on the ground. */
 export const WINDOW = { x: 40, y: 40, w: 1000, h: 563, r: 20 };
 
+/** A 16:9 film fills the window; anything else is fitted inside it. */
+export const isWide = (width, height) => Math.abs(width / height - 16 / 9) < 0.01;
+
+/** "#rrggbb" as [r, g, b]. */
+export const hexRgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+
+/**
+ * Where the picture sits inside the window, window-relative: a 16:9 film fills it; another shape is fitted inside and
+ * centred, as the frames are decoded (lib/media.mjs filmFrames).
+ */
+export function pictureRect(width, height) {
+  const ar = width / height;
+  if (isWide(width, height)) return { x: 0, y: 0, w: WINDOW.w, h: WINDOW.h };
+  const w = Math.min(WINDOW.w, Math.round(WINDOW.h * ar)), h = Math.min(WINDOW.h, Math.round(WINDOW.w / ar));
+  return { x: Math.floor((WINDOW.w - w) / 2), y: Math.floor((WINDOW.h - h) / 2), w, h };
+}
+
+/**
+ * The colours a film draws with: the house palette, or with a spec's `style` its own ground and an accent for what is
+ * playing now (playhead, time, the playing shot's outline, the played part of a sounding clip).
+ */
+export function palette(style) {
+  if (!style || (!style.ground && !style.accent)) return COLOR;
+  return { ...COLOR, ground: style.ground ?? COLOR.ground, accent: style.accent ?? null };
+}
+
 /** At most six audio tracks fit under V1 at a readable height. */
 export const MAX_LANES = 6;
 

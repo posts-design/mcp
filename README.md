@@ -24,8 +24,9 @@ You need a free [posts.design](https://posts.design/signup) account.
 click Connect, then sign in. Or add it yourself: Settings → Connectors → Add custom connector, paste
 `https://posts.design/mcp`, then sign in.
 
-**ChatGPT:** Plugins → Add custom MCP server with OAuth. Paste `https://posts.design/mcp`, then
-install it and sign in.
+**ChatGPT:** open [posts.design in ChatGPT's plugins](https://chatgpt.com/plugins/plugin_asdk_app_6ae117b059408191a8852cd03e909e67),
+install it, then sign in. Or add it yourself: Plugins → Add custom MCP server with OAuth, paste
+`https://posts.design/mcp`, then install it and sign in.
 
 **Claude Code:**
 

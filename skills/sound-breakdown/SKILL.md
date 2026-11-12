@@ -98,6 +98,9 @@ lines ("Every Acme post," / "in one place."). Leave `end` out if they don't want
 ## 7. Variants
 
 - For Reels, TikTok and Shorts: `"aspect": "9:16"`, rendered to its own file.
+- A look of the film's own: `"style": { "ground", "accent", "light" }` (README, Options). Take the dark ground and
+  the accent from the film's frames, keep the accent to one colour, and render stills before the film: the light
+  should read as a faint tint around the picture, never a second picture.
 - For networks capped at 60 s: `node excerpt.mjs work/breakdown.json cut/ --from <s> --pull <s> --to <s>`, then
   render `cut/breakdown.json`. Start on an edit and the start of a line.
 
