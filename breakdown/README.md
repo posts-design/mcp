@@ -149,8 +149,9 @@ your agent a head start. `get_video_scenes` lists its scenes with times, a shot 
 `search_references` with `brand` and `format: "video"` lists the brand's other videos for the end scene: put the
 `video.url` of those whose `video.role` is `analysis` into `end.posts`, leaving out the film itself.
 
-To have an agent do all of this, copy the [sound-breakdown skill](../skills/sound-breakdown/SKILL.md) into your
-agent's skills (`cp -r skills/sound-breakdown ~/.claude/skills/` for Claude Code).
+To have an agent do all of this, use the [sound-breakdown skill](../skills/sound-breakdown/SKILL.md): in Claude Code,
+`/plugin marketplace add posts-design/mcp` then `/plugin install posts-design@posts-design` adds it with the
+posts.design MCP; in other agents, copy its folder into your agent's skills.
 
 ## How it's built
 

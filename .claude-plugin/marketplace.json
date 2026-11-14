@@ -1,0 +1,15 @@
+{
+  "name": "posts-design",
+  "description": "Hand-picked real launch posts from 1,000+ brands, and skills that plan, write and build yours from them.",
+  "owner": {
+    "name": "posts.design",
+    "url": "https://posts.design"
+  },
+  "plugins": [
+    {
+      "name": "posts-design",
+      "source": "./",
+      "description": "Hand-picked real launch posts from 1,000+ brands, and skills that plan, write and build yours from them."
+    }
+  ]
+}

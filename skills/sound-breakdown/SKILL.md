@@ -1,6 +1,6 @@
 ---
 name: sound-breakdown
-description: Make a sound breakdown of a film, where the film plays over an editor's timeline of itself with a filmstrip of its shots and one audio track per stem, named for what you see and hear. Use when someone asks for a sound breakdown, a timeline breakdown or a "how this film is cut" video of a launch film, product film or ad they give you.
+description: Make a sound breakdown of a film, where the film plays over an editor's timeline of itself with a filmstrip of its shots and one audio track per stem, named for what you see and hear. Use when someone asks for a sound breakdown, a timeline breakdown or a "how this film is cut" video of a launch film, product film or ad they give you. Only for a film file they give you, rendered as a new video; to read how a library video is directed, use launch-video-direction.
 ---
 
 # Sound breakdown
@@ -49,11 +49,12 @@ vertical video. If they want the brand's mark in the corner, ask for its avatar 
 node prep.mjs <film> work/ --python .venv/bin/python
 ```
 
-Add `--avatar <logo>` when they gave you the brand's mark, and what they chose: `--stems elevenlabs`, `--words whisper` to keep words local while a key is set, or
-`--whisper-model large-v3-turbo`. Prep takes about a minute for a short film, longer on its first run while it
-downloads models. Run it in the background or with a long timeout; if it is cut off, run it again, since it keeps
-finished stems and words. Read what it prints (the number of boundaries, the tempo, each stem's clip count), then
-look at `prep/shots.jpg`, `prep/stems.png` and `prep/words.txt`. You name from these.
+Add `--avatar <logo>` when they gave you the brand's mark, and what they chose: `--stems elevenlabs`,
+`--words whisper` to keep words local while a key is set, or `--whisper-model large-v3-turbo`. Prep takes about a
+minute for a short film, longer on its first run while it downloads models. Run it in the background or with a long
+timeout; if it is cut off, run it again, since it keeps finished stems and words. Read what it prints (the number of
+boundaries, the tempo, each stem's clip count), then look at `prep/shots.jpg`, `prep/stems.png` and
+`prep/words.txt`. You name from these.
 
 **With the posts.design MCP connected** and the film in its library (search for it with `search_references`):
 `get_video_scenes` gives scene times to check the shot list against, and `get_video_breakdown` gives beats to group

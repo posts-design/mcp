@@ -12,7 +12,8 @@ posts from top brands and their designers: launch videos, carousels, OG images a
 
 This repository holds the server's documentation, its
 [MCP Registry](https://registry.modelcontextprotocol.io) listing (`design.posts/mcp`), its
-Antigravity and Cursor plugins, and the open-source [sound breakdown kit](#sound-breakdown-kit).
+Claude Code, Antigravity and Cursor plugins, its [skills](#skills) and the open-source
+[sound breakdown kit](#sound-breakdown-kit).
 The server itself is hosted by posts.design and is not open source.
 
 ## Set up
@@ -28,14 +29,22 @@ click Connect, then sign in. Or add it yourself: Settings → Connectors → Add
 install it, then sign in. Or add it yourself: Plugins → Add custom MCP server with OAuth, paste
 `https://posts.design/mcp`, then install it and sign in.
 
-**Claude Code:**
+**Claude Code:** install the plugin, which adds the server and its [skills](#skills):
+
+```text
+/plugin marketplace add posts-design/mcp
+/plugin install posts-design@posts-design
+```
+
+Then run `/mcp`, choose posts.design and sign in. Ask, for example: "Find launch references for my invoicing app's
+funding announcement", "How does Linear launch features?" or "Plan a 30-second launch video for my app". If you
+added the server by hand before, remove it (`claude mcp remove posts`) so you sign in once.
+
+For the server alone, add it yourself, with `--header "Authorization: Bearer <your-key>"` to use a personal key:
 
 ```bash
 claude mcp add --transport http posts https://posts.design/mcp
 ```
-
-Then run `/mcp` and sign in. To use a personal key instead, add
-`--header "Authorization: Bearer <your-key>"`.
 
 **Antigravity:**
 
@@ -109,7 +118,7 @@ stills from returned links never uses credits. Credits reset on the 1st of each 
 ## Prompts
 
 Three starter prompts walk your agent through a first task. In Claude, open **+** in the chat box and
-choose posts.design; in Claude Code they are `/mcp__posts__…` commands. Choosing one is free; the
+choose posts.design; in Claude Code they appear as slash commands under the server's name. Choosing one is free; the
 reads it makes use credits as usual.
 
 | Prompt | You give | You get |
@@ -117,6 +126,24 @@ reads it makes use credits as usual.
 | `launch_references` | Your product, and what you're launching | The closest launch posts and a direction for yours |
 | `competitor_audit` | A brand | Its launches: recurring patterns, what changed, what to borrow |
 | `launch_video_direction` | Your product, and a length | A beat-by-beat plan for a launch video, from real ones |
+
+## Skills
+
+The Claude Code plugin brings eight skills. Each one takes your agent from a request to a finished result, using the
+server for references. Your agent picks one when your request fits, or run it yourself as a slash command, such as
+`/posts-design:launch-brief`. In other agents, copy a skill's folder into your agent's skills. With the plugin, you
+don't need the starter prompts above: the first three skills are fuller versions of them.
+
+| Skill | Ask for | You get |
+|---|---|---|
+| [launch-references](skills/launch-references/SKILL.md) | Examples for your launch post | The closest launch posts and a direction for yours |
+| [competitor-audit](skills/competitor-audit/SKILL.md) | How a brand launches | Its recurring patterns, what changed, what to borrow |
+| [launch-video-direction](skills/launch-video-direction/SKILL.md) | A plan for your launch video | Beats with timings, type, colour and the end card, from real launch videos |
+| [launch-brief](skills/launch-brief/SKILL.md) | A brief from a one-line idea | One committed look, moves worth copying and numbered beats, each from a real launch |
+| [launch-copy](skills/launch-copy/SKILL.md) | The caption for your launch post | Three drafts shaped like real launch captions, or edits to yours |
+| [og-image](skills/og-image/SKILL.md) | A link preview image for a page | A direction from real OG images, built in your project |
+| [x-header](skills/x-header/SKILL.md) | An X profile header | A direction from real brand headers, made at 1500×500 |
+| [sound-breakdown](skills/sound-breakdown/SKILL.md) | A sound breakdown of a film you give it | The film over an editor's timeline of itself, rendered on your machine |
 
 ## What it can and can't do
 
@@ -133,8 +160,8 @@ reads it makes use credits as usual.
 [`breakdown/`](breakdown/) turns any film you give it into a sound breakdown: the film plays over an editor's
 timeline of itself, with a filmstrip of its shots and one audio track per stem of its mix. Stems, words and shots
 are measured on your machine (or by ElevenLabs with your own key) and the film renders without a browser. The
-[sound-breakdown skill](skills/sound-breakdown/SKILL.md) walks an agent from the film to the finished breakdown:
-for Claude Code, `cp -r skills/sound-breakdown ~/.claude/skills/`. MIT licensed, and provided
+[sound-breakdown skill](skills/sound-breakdown/SKILL.md), part of the Claude Code plugin, walks an agent from the
+film to the finished breakdown. MIT licensed, and provided
 [as is](breakdown/README.md#licence).
 
 ## Help

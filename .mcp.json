@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "posts": {
+      "type": "http",
+      "url": "https://posts.design/mcp"
+    }
+  }
+}
