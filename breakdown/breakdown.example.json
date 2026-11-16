@@ -7,6 +7,7 @@
   "bpm": 112,
   "barAnchor": 6.18,
   "gainDb": -2,
+  "style": { "ground": "#15121a", "accent": "#ef6fa8", "light": true },
   "pullBack": 24.4,
   "hold": 0.6,
   "acts": [

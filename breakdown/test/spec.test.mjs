@@ -83,8 +83,9 @@ test("times past the film's end, a late cover and placeholder names are warned a
 });
 
 test("style is optional; ground and accent are colours, light is on, off or a strength", () => {
-  assert.equal(parseSpec(example()).style, null);
   const raw = example();
+  delete raw.style;
+  assert.equal(parseSpec(raw).style, null);
   raw.style = { ground: "#15121a", accent: "#ef6fa8", light: true };
   assert.deepEqual(parseSpec(raw).style, { ground: "#15121a", accent: "#ef6fa8", light: 1 });
   raw.style = { light: 0.5 };

@@ -23,12 +23,12 @@ in its public folder). You need which page the image is for; ask only for what t
 ## 2. Find references
 
 If the person's brand is in the library, search its own OG images first (`brand` set to it, `limit: 5`, an empty
-`query`; nothing back costs nothing). Then call `search_references` with `collection: "og-images"`, `limit: 5`, what the
-product is and who it's for as `query` ("invoicing app for freelancers"), and up to two more phrasings in `alsoQueries`,
-one of them the look; colour and type words match little on their own. Set `pageType` when the page is one of homepage,
-product, pricing, docs, blog, changelog, company, careers, security or solutions; if no result is in the product's
-field, search once more without it, using the product's category ("invoicing", "billing"). Results past `total` are
-looser matches (`matched` says how), and with a descriptive query all of them can be: judge those by how they look. Each
+`query`, and `pageType` as below; nothing back costs nothing). Then call `search_references` with `collection:
+"og-images"`, `limit: 5`, the product's category in a word or two as `query` ("invoicing"), and up to two more phrasings
+in `alsoQueries`: what it is and who it's for ("invoicing app for freelancers"), and the look; colour and type words
+match little on their own. Set `pageType` when the page is one of product, pricing, docs, blog, changelog, company,
+careers, security or solutions; if no result is in the product's field, search once more without it. Results past
+`total` are looser matches (`matched` says how), and with `total` 0 all of them are: judge those by how they look. Each
 result's `pageUrl` is the page it previews.
 
 Pick up to five that fit, preferring different brands and layouts, and say when none is in the product's field. If your
@@ -53,8 +53,9 @@ platform.
 ## 4. Build
 
 Use the project's stack and its real assets: the logo file, a real screenshot of the product, the brand's fonts. Never
-draw a stand-in logo or invent UI. When the page doesn't exist yet, add only the image in its route folder and say the
-page still needs building; don't write the page.
+draw a stand-in logo or invent UI; when the logo file is an icon alone, set the name beside it in the brand's font and
+say so. When the page doesn't exist yet, add only the image in its route folder and say the page still needs building;
+don't write the page.
 
 - **Next.js (App Router):** an `opengraph-image.tsx` in the page's route folder (`app/` for the whole site), exporting
   `size` (1200×630), `contentType` (`image/png`), `alt`, and a default function that returns an `ImageResponse` from
@@ -63,8 +64,10 @@ page still needs building; don't write the page.
   otf or woff (not woff2) read once at module scope, images as absolute URLs or data URIs (a relative path doesn't
   load), and a bundle under 500 KB, fonts and images included. Set `metadataBase` in the root layout's `metadata` so the
   image URL is absolute, taking the domain from the project (README, `package.json`, a canonical tag) and saying where.
-- **Other stacks:** the framework's own OG image route, else a script with Satori and resvg, else a static 1200×630 PNG
-  in the public folder with an `og:image` tag (absolute URL) and `og:image:width`, `og:image:height` and `og:image:alt`.
+- **Other stacks:** the framework's own OG image route, else a static 1200×630 PNG in the public folder with an
+  `og:image` tag (absolute URL) and `og:image:width`, `og:image:height` and `og:image:alt`. Make that PNG from an SVG
+  with the renderer this plugin carries (`../../render`; its README has the steps): copy it to a scratch folder and ask
+  before `npm install`.
 
 Check that the page sets `twitter:card` to `summary_large_image`, or X shows a small square card; X takes the image from
 `og:image`. In Next.js that is `metadata.twitter.card`, set wherever a page sets `twitter`, since a page's `twitter`

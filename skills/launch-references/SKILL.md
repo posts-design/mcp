@@ -23,7 +23,8 @@ you assumed.
 ## 2. Search
 
 Call `search_references` once with `limit: 5`, the person's words as `query`, and up to two more phrasings in
-`alsoQueries` (one credit for all three). Add a filter only when it is clearly implied:
+`alsoQueries` (one credit for all three): the feature, and the product's category ("invoicing"). Add a filter only when
+it is clearly implied:
 - `format` (video, gif, carousel). When they name two formats, leave `format` out and put one format's word in each
   phrasing ("…launch video", "…carousel"), then tell results apart by `classification.format` and `video`.
 - `category` (a category's name on posts.design, such as announcement, feature-update or funding; an unknown name is
@@ -33,22 +34,25 @@ Call `search_references` once with `limit: 5`, the person's words as `query`, an
 
 If the person's own brand is in the library, its earlier launches are the first references to read: search with `brand`
 set to it, `limit: 10` and an empty `query` (newest first; nothing back means it isn't in the library, and costs
-nothing). If nothing fits, rephrase once more broadly. When a format has no good examples, say so rather than stretching
-a weak match: results past `total` are looser matches (`matched` says how), so use them only when they truly fit.
+nothing, so try the likely names); a product can post under its own name (v0 at Vercel, Claude for Claude Code), so
+search that brand too. If nothing fits, rephrase once more broadly. When a format has no good examples, say so rather
+than stretching a weak match: results past `total` are looser matches (`matched` says how), and with `total` 0 all of
+them are, so use them only when they truly fit.
 
 ## 3. Pick and look
 
 Pick three to five results that fit the product and the format, preferring different brands and treatments. Search
-results already carry the caption, `captionFacts`, palette, classification and often a description; open a result with
-`get_reference` (one credit) only when you need its on-image text (`visibleText`), its stills, or its description is
-missing.
+results already carry the caption, `captionFacts`, palette, classification and often a description; open one or two of
+the strongest with `get_reference` (one credit each) when you need their stills or on-image text
+(`description.visibleText`, when there is one). A missing description alone isn't a reason to open one: look at its
+image instead.
 
 Base what you say on what you have seen. References give images as links: if your tools can show images, download the
 preview, or for a video its `video.posterUrl` and one or two stills from the first seconds (`video.frames` in
-`get_reference`), and look at them; a video's `previewUrl` can be a frame from mid-film. If they can't, work from the
-description, `visibleText`, palette and classification, and say you haven't seen the images. When
-`classification.colours` is empty, the sampled `palette` gives the colours; type can only come from looking. Dates are
-`sourcePublishedAt`.
+`get_reference`), and look at them; a video's poster and `previewUrl` can be frames from mid-film, and its first still
+can be blank, so take the first that shows something. If they can't, work from the description, `visibleText`, palette
+and classification, and say you haven't seen the images. When `classification.colours` is empty, the sampled `palette`
+gives the colours; type can only come from looking. Dates are `sourcePublishedAt`.
 
 ## 4. Direction
 

@@ -6,8 +6,9 @@ wall of the brand's other posts.
 
 ![A sound breakdown: the film in a window above a timeline with V1, Dialogue, Song vocal, Drums, Bass and Synths & FX tracks](example/preview.webp)
 
-*Eight seconds of a breakdown of Rockstar Games' GTA VI pre-loading post, made with this kit. Its
-[spec](breakdown.example.json) is shown for its fields; the film, stems and posts it names are not included.*
+*Eight seconds of a breakdown of Rockstar Games' GTA VI pre-loading post, made with this kit in a `style` taken from
+the film: its pink as the one accent, and its light faintly around the picture. Its [spec](breakdown.example.json) is
+shown for its fields; the film, stems and posts it names are not included.*
 
 The kit separates the stems, transcribes the words and finds the shots and tempo on your machine (or with ElevenLabs,
 when you give it your key), then drafts a spec for you or your agent to name. It renders with Node, sharp and ffmpeg,
