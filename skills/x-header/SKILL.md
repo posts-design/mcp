@@ -16,9 +16,10 @@ choose posts.design and sign in with a free account, then stop: don't answer fro
 conversation, share the plan and credits left from its `summary` in one line, leaving out any sentence that offers Pro.
 A search page costs one credit; this skill usually spends one or two.
 
-You need the account and what the header should say or show (the product, a launch, a line, or the brand alone). If
-you're in their project, take the colours, fonts and logo files from it. Ask only for what you can't find; if they can't
-answer now, go ahead and list what you assumed. A person's header carries their product or their role, not both, and
+You need the account and what the header should say or show (the product, a launch, a line, or the brand alone). The
+best headers come from four things: the brand's font files, its logo as SVG, a real screenshot of what the product
+mainly does, and a way to render a PNG (below). If you're in their project, take the colours, fonts and logo files from
+it. Ask only for what you can't find; if they can't answer now, go ahead and list what you assumed. A person's header carries their product or their role, not both, and
 never repeats the @handle the profile already shows (a brand's name or logo is fine, even when it matches the handle).
 
 ## 2. Find references
@@ -48,13 +49,13 @@ has the full measurements and X's own rules; read it (no credit) when the person
 
 ## 4. Make it
 
-Make the header as a 1500×500 SVG and render it with the renderer this plugin carries (`../../render` from this skill's
-folder). Copy that folder to a scratch folder outside the project, or reuse one you set up before, ask once before
-`npm install` there, then run `node render.mjs header.svg brand.json header.png`. Its README says how to name the
-brand's font files and write the SVG; it draws from those files alone, so the type matches without installing fonts.
-Take the font and logo files from the project; without them, ask before downloading them from the brand's own site, or
-say which face stands in. Until the person agrees to the install, give the SVG and say it is unrendered, with its sizes
-and positions unchecked: drawing it again with an image library such as Pillow isn't rendering it.
+Make the header as SVG or HTML and render it to PNG with what the project or machine already has: the approach the
+project uses for its OG images, resvg, rsvg-convert, ImageMagick, sharp, or a headless browser's screenshot. With none
+of these, ask once to add `satori` and `@resvg/resvg-js` in a scratch folder outside the project: they draw text from
+the brand's font files, so the type matches without installing fonts. Take the font and logo files from the project;
+without them, ask before downloading them from the brand's own site, or say which face stands in. Until the person
+agrees to an install, give the SVG and say it is unrendered, with its sizes and positions unchecked: drawing it again
+with an image library such as Pillow isn't rendering it.
 
 Use the real logo file and a real product shot (the one showing what the product mainly does, cropped to read, its words
 checked), never a redrawn stand-in; with no screenshot, make it type-led and say where one would go, and say when a

@@ -145,6 +145,9 @@ don't need the starter prompts above: the first three skills are fuller versions
 | [x-header](skills/x-header/SKILL.md) | An X profile header | A direction from real brand headers, made at 1500×500 |
 | [sound-breakdown](skills/sound-breakdown/SKILL.md) | A sound breakdown of a film you give it | The film over an editor's timeline of itself, rendered on your machine |
 
+For the best OG images and headers, run those skills in your project, or give your agent the brand's font files, its
+logo as SVG and a real screenshot of the product.
+
 ## What it can and can't do
 
 - It reads the published library and your own Saves, and changes your Saves only when you ask.

@@ -18,7 +18,8 @@ A search page or an opened reference costs one credit; this skill spends one to 
 
 Read the brand from the project before asking: colours (CSS variables, the Tailwind or theme config), fonts, logo files,
 the page's title and description, and any OG image it already has (`opengraph-image.*`, an `og:image` tag, an `og` file
-in its public folder). You need which page the image is for; ask only for what the project doesn't hold.
+in its public folder). The best images come from the brand's font files, its logo as SVG and a real screenshot of the
+page's product. You need which page the image is for; ask only for what the project doesn't hold.
 
 ## 2. Find references
 
@@ -64,10 +65,8 @@ don't write the page.
   otf or woff (not woff2) read once at module scope, images as absolute URLs or data URIs (a relative path doesn't
   load), and a bundle under 500 KB, fonts and images included. Set `metadataBase` in the root layout's `metadata` so the
   image URL is absolute, taking the domain from the project (README, `package.json`, a canonical tag) and saying where.
-- **Other stacks:** the framework's own OG image route, else a static 1200×630 PNG in the public folder with an
-  `og:image` tag (absolute URL) and `og:image:width`, `og:image:height` and `og:image:alt`. Make that PNG from an SVG
-  with the renderer this plugin carries (`../../render`; its README has the steps): copy it to a scratch folder and ask
-  before `npm install`.
+- **Other stacks:** the framework's own OG image route, else a script with Satori and resvg, else a static 1200×630 PNG
+  in the public folder with an `og:image` tag (absolute URL) and `og:image:width`, `og:image:height` and `og:image:alt`.
 
 Check that the page sets `twitter:card` to `summary_large_image`, or X shows a small square card; X takes the image from
 `og:image`. In Next.js that is `metadata.twitter.card`, set wherever a page sets `twitter`, since a page's `twitter`
