@@ -129,7 +129,7 @@ reads it makes use credits as usual.
 
 ## Skills
 
-The Claude Code plugin brings eight skills. Each one takes your agent from a request to a finished result, using the
+The Claude Code plugin brings nine skills. Each one takes your agent from a request to a finished result, using the
 server for references. Your agent picks one when your request fits, or run it yourself as a slash command, such as
 `/posts-design:launch-brief`. In other agents, copy a skill's folder into your agent's skills. With the plugin, you
 don't need the starter prompts above: the first three skills are fuller versions of them.
@@ -144,6 +144,7 @@ don't need the starter prompts above: the first three skills are fuller versions
 | [og-image](skills/og-image/SKILL.md) | A link preview image for a page | A direction from real OG images, built in your project |
 | [x-header](skills/x-header/SKILL.md) | An X profile header | A direction from real brand headers, made at 1500×500 |
 | [sound-breakdown](skills/sound-breakdown/SKILL.md) | A sound breakdown of a film you give it | The film over an editor's timeline of itself, rendered on your machine |
+| [close-match](skills/close-match/SKILL.md) | A launch film like one you like, for your product | That film remade shot by shot in your brand, rendered on your machine (reads its scenes with Pro) |
 
 For the best OG images and headers, run those skills in your project, or give your agent the brand's font files, its
 logo as SVG and a real screenshot of the product.
