@@ -1,14 +1,14 @@
-# Close match
+# Remake
 
 <p>
-  <img src="examples/sunray.gif" width="49%" alt="A 16:9 close match for posts.design: a chat with an agent that answers with three dark launch films">
-  <img src="examples/opendesign.gif" width="49%" alt="A 16:9 close match for posts.design: “Not just one style. Any colour. Any brand.”">
+  <img src="examples/sunray.gif" width="49%" alt="A 16:9 remake for posts.design: a chat with an agent that answers with three dark launch films">
+  <img src="examples/opendesign.gif" width="49%" alt="A 16:9 remake for posts.design: “Not just one style. Any colour. Any brand.”">
 </p>
 <p>
-  <img src="examples/gta-vi.gif" width="32%" alt="A square close match for posts.design: a grid of launch films filling in around the posts.design mark">
+  <img src="examples/gta-vi.gif" width="32%" alt="A square remake for posts.design: a grid of launch films filling in around the posts.design mark">
 </p>
 
-Three close matches we made for posts.design.
+Three remakes we made for posts.design.
 
 Find a launch video you like in the [posts.design](https://posts.design) gallery and remake it for your own product
 and use case. Your agent in Claude Code rebuilds the video scene by scene, with the same layout, moves and timing, and

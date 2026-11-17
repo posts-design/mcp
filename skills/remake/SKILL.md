@@ -1,10 +1,10 @@
 ---
-name: close-match
+name: remake
 description: Remake a launch film your person likes, shot by shot, for their own product - its scenes, layout, motion and timing, with their words, logo, colours and fonts - built in HTML with HyperFrames and rendered on their machine. Use when someone wants a launch video "like this one", "in the style of" a brand's film, or asks to remake, recreate or closely copy a launch film, product film or teaser for their product. To plan a launch video from several references instead, use launch-video-direction.
 argument-hint: "<the film you like> for <your product>"
 ---
 
-# Close match
+# Remake
 
 You remake one launch film your person likes for their product: the reference's scenes, where everything sits, its
 moves and its timing, with their words, product, logo, colours and fonts. The posts.design MCP (the `posts` server in
@@ -14,7 +14,7 @@ this plugin) holds the film's scenes and stills; HyperFrames turns your HTML int
 
 Call `get_my_access` (free). If the posts.design tools are missing or ask for sign-in, tell your person to run `/mcp`,
 choose posts.design and sign in, then stop. On the first call, share the plan and credits left from its `summary` in
-one line, leaving out any sentence that offers Pro. A close match reads the film scene by scene with
+one line, leaving out any sentence that offers Pro. A remake reads the film scene by scene with
 `get_video_scenes` and `get_scene_frames`, which come with Pro: on Free, tell your person in a sentence with the link
 from `get_my_access`'s `pro`, and stop. A film of about 30 s spends about 15 to 25 credits.
 
@@ -26,7 +26,7 @@ You need, in one message if anything is missing:
   (`format: "video"`, the brand in `brand`); if they want ideas, show three to five videos that fit their product with
   their links and let them pick. The film must be in the library with `video.hasBreakdown` true.
 - **The product, in facts.** What it does and for whom, and the numbers or claims they want in the film. Use only
-  these: a close match copies the reference's shots, never its claims.
+  these: a remake copies the reference's shots, never its claims.
 - **The brand.** Its name, logo as SVG, colours and font files. In their project, look for them yourself first
   (design tokens, `public/`, the site's CSS) and say what you found.
 - **How close.** By default every scene, its layout, moves and timing; they may ask for less in their own words
