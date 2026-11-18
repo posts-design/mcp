@@ -39,7 +39,8 @@ to part of the plan (say, a founder talking to camera), say so rather than borro
 On Pro, read `get_video_breakdown` for the two or three closest whose `video.hasBreakdown` is true, including a playbook
 example when one fits: timed beats, hook, type, colour and the end card, each tied to a still. A breakdown carries the
 link and source, so it needs no `get_reference` first. To see one move up close, `get_video_scenes` lists the scenes and
-`get_scene_frames` shows one scene as stills; spend a credit there only for a move you will borrow.
+`get_scene_frames` shows one scene as stills; spend a credit there only for a move you will borrow. On Free, open none of
+these: Free opens only one film in full, and it's your person's to choose (the remake skill uses it).
 
 On Free, open the two or three closest with `get_reference` and work from their stills, pacing and captions. References
 give images as links: if your tools can show images, download a few stills from the first seconds (`video.frames`, by

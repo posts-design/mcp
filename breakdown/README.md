@@ -10,6 +10,18 @@ wall of the brand's other posts.
 the film: its pink as the one accent, and its light faintly around the picture. Its [spec](breakdown.example.json) is
 shown for its fields; the film, stems and posts it names are not included.*
 
+## With your agent
+
+In Claude Code, add the posts.design plugin, then give your agent a film and ask for a sound breakdown:
+
+```text
+/plugin marketplace add posts-design/mcp
+/plugin install posts-design@posts-design
+```
+
+In other agents, copy the [sound-breakdown skill](../skills/sound-breakdown/SKILL.md)'s folder into your agent's
+skills. To run the kit yourself, start at [Quick start](#quick-start).
+
 The kit separates the stems, transcribes the words and finds the shots and tempo on your machine (or with ElevenLabs,
 when you give it your key), then drafts a spec for you or your agent to name. It renders with Node, sharp and ffmpeg,
 no browser. It was built at [posts.design](https://posts.design) for our own breakdowns and is free to use.
@@ -150,9 +162,7 @@ your agent a head start. `get_video_scenes` lists its scenes with times, a shot 
 `search_references` with `brand` and `format: "video"` lists the brand's other videos for the end scene: put the
 `video.url` of those whose `video.role` is `analysis` into `end.posts`, leaving out the film itself.
 
-To have an agent do all of this, use the [sound-breakdown skill](../skills/sound-breakdown/SKILL.md): in Claude Code,
-`/plugin marketplace add posts-design/mcp` then `/plugin install posts-design@posts-design` adds it with the
-posts.design MCP; in other agents, copy its folder into your agent's skills.
+To have an agent do all of this, use the sound-breakdown skill ([With your agent](#with-your-agent)).
 
 ## How it's built
 

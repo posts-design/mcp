@@ -15,8 +15,10 @@ this plugin) holds the film's scenes and stills; HyperFrames turns your HTML int
 Call `get_my_access` (free). If the posts.design tools are missing or ask for sign-in, tell your person to run `/mcp`,
 choose posts.design and sign in, then stop. On the first call, share the plan and credits left from its `summary` in
 one line, leaving out any sentence that offers Pro. A remake reads the film scene by scene with
-`get_video_scenes` and `get_scene_frames`, which come with Pro: on Free, tell your person in a sentence with the link
-from `get_my_access`'s `pro`, and stop. A film of about 30 s spends about 15 to 25 credits.
+`get_video_scenes` and `get_scene_frames`, which come with Pro. Free opens one film in full: when
+`get_my_access`'s `pro.freeFilm.open` is true, tell your person this remake uses their free film and confirm which film
+before the first scene read. When `pro.freeFilm` names another film, only that one can be remade on Free: say so in a
+sentence with the link from `pro`, and stop. A film of about 30 s spends about 15 to 25 credits.
 
 ## 2. The brief
 
@@ -91,9 +93,8 @@ timelines and assets are written; this skill decides what the film shows.
 
 Give your person the film's path and length beside the reference's, the beats you changed from the reference and why (meaning,
 readability, length), and anything you assumed about the product for them to confirm. The film is silent: suggest
-music cut to its scene changes. Suggest a caption that credits the reference ("after @brand's launch film") and cite
-the reference with its posts.design link and its original source. Ask them to watch it once in real time before
-posting.
+music cut to its scene changes. Name the reference with its posts.design link and its original source. Ask them to
+watch it once in real time before posting.
 
 ## Notes
 
