@@ -1,14 +1,14 @@
 # Sound breakdown
 
-This kit turns a film into a video of itself. The film plays above an editor's timeline: a filmstrip of its shots and
-one audio track per stem of its mix (drums, bass, vocals…), each clip named for what you see and hear. It can end on a
-wall of the brand's other posts.
-
 ![A sound breakdown: the film in a window above a timeline with V1, Dialogue, Song vocal, Drums, Bass and Synths & FX tracks](example/preview.webp)
 
-*Eight seconds of a breakdown of Rockstar Games' GTA VI pre-loading post, made with this kit in a `style` taken from
+*Eight seconds of a breakdown of Rockstar Games’ GTA VI pre-loading post, made with this kit in a `style` taken from
 the film: its pink as the one accent, and its light faintly around the picture. Its [spec](breakdown.example.json) is
 shown for its fields; the film, stems and posts it names are not included.*
+
+This kit turns a film into a video of itself. The film plays above an editor’s timeline: a filmstrip of its shots and
+one audio track per stem of its mix (drums, bass, vocals…), each clip named for what you see and hear. It can end on a
+wall of the brand’s other posts.
 
 ## With your agent
 
@@ -19,14 +19,14 @@ In Claude Code, add the posts.design plugin, then give your agent a film and ask
 /plugin install posts-design@posts-design
 ```
 
-In other agents, copy the [sound-breakdown skill](../skills/sound-breakdown/SKILL.md)'s folder into your agent's
+In other agents, copy the [sound-breakdown skill](../skills/sound-breakdown/SKILL.md)’s folder into your agent’s
 skills. To run the kit yourself, start at [Quick start](#quick-start).
 
 The kit separates the stems, transcribes the words and finds the shots and tempo on your machine (or with ElevenLabs,
 when you give it your key), then drafts a spec for you or your agent to name. It renders with Node, sharp and ffmpeg,
 no browser. It was built at [posts.design](https://posts.design) for our own breakdowns and is free to use.
 
-Use any film you're comfortable breaking down and posting. The layout is built for 16:9 films; a square or vertical
+Use any film you’re comfortable breaking down and posting. The layout is built for 16:9 films; a square or vertical
 one plays as a narrower picture in the window. Breakdowns read best on a designed film with music cut to picture and a
 few distinct layers, such as a launch film, product film or ad. UI recordings, voice-over alone and loops have less to
 show.
@@ -59,13 +59,13 @@ to `pullBack`, then about 7.5 s of pull-back and end scene.
 ### What it downloads
 
 Prep picks the lightest setup that fits the film and checks for each package before the step that needs it, saying
-what to install. Sizes are for Linux; a Mac's PyTorch is smaller.
+what to install. Sizes are for Linux; a Mac’s PyTorch is smaller.
 
 | Step | Default | Download | Lighter |
 |---|---|---|---|
 | Measuring | numpy | about 17 MB | |
 | Stems | Demucs, with the CPU-only PyTorch | about 250 MB, and a 55 MB model on the first prep. Leave out the PyTorch index only on Linux with an NVIDIA GPU, for the CUDA build (about 3 GB). | `--stems elevenlabs` with your `ELEVENLABS_API_KEY`, or `--stems <folder>`: nothing |
-| Words | none when the vocal stem is silent; ElevenLabs Scribe when `ELEVENLABS_API_KEY` is set; otherwise faster-whisper's `small` | faster-whisper about 130 MB, and the `small` model, about 490 MB, the first time it hears words (`--whisper-model large-v3-turbo` hears more: 1.6 GB) | the key, or `--words none`: nothing |
+| Words | none when the vocal stem is silent; ElevenLabs Scribe when `ELEVENLABS_API_KEY` is set; otherwise faster-whisper’s `small` | faster-whisper about 130 MB, and the `small` model, about 490 MB, the first time it hears words (`--whisper-model large-v3-turbo` hears more: 1.6 GB) | the key, or `--words none`: nothing |
 
 With an ElevenLabs key and `--stems elevenlabs`, numpy is all the Python you install. Rendering needs no Python; see
 **Speed** below for its memory and cache.
@@ -78,11 +78,11 @@ With an ElevenLabs key and `--stems elevenlabs`, numpy is all the Python you ins
 |---|---|
 | `film.mp4` | a copy of the film, which the spec points at |
 | `stems/` | the mix separated into drums, bass, vocals, guitar, piano and other |
-| `prep/shots.jpg` | each candidate shot's middle frame with its number and start; "soft" marks a boundary found by a slower change (a whip pan, a match move) |
-| `prep/stems.png` | every stem's spectrogram on one time axis, with the cuts over it |
+| `prep/shots.jpg` | each candidate shot’s middle frame with its number and start; "soft" marks a boundary found by a slower change (a whip pan, a match move) |
+| `prep/stems.png` | every stem’s spectrogram on one time axis, with the cuts over it |
 | `prep/words.txt` | the words heard on the vocal stem with their times; `?` marks words to check by ear |
 | `prep/words.json` | the same words as the transcriber gave them, which a rerun reuses; delete it to transcribe again |
-| `prep/analysis.json` | the raw measurements: cuts, tempo, each stem's activity and loudness |
+| `prep/analysis.json` | the raw measurements: cuts, tempo, each stem’s activity and loudness |
 | `breakdown.json` | the draft spec: every shot, clip and act timed, with placeholder names |
 
 Running prep again reuses `stems/` and `prep/words.json` and never overwrites `breakdown.json`. To redo the stems or
@@ -97,17 +97,17 @@ post.
    the detector missed (step through suspect stretches frame by frame). A camera move that never cuts is one shot: V1
    shows edits, not camera moves. Name each shot in two or three words for what it shows. Add a `transitions` tab only
    where the frames show a dissolve or wipe.
-2. **Acts.** Group the shots into 5 to 10 acts, named from the film's own on-screen words where it has them. The
+2. **Acts.** Group the shots into 5 to 10 acts, named from the film’s own on-screen words where it has them. The
    footer shows the playing act, numbered.
 3. **Tracks.** Listen to each stem against the picture with `prep/stems.png` open. Keep the four or five stems that
    carry something, rename them for a listener (Drums, Bass, Synths & FX), and merge or split the drafted clips. Name
    each clip by what it is ("Slide synth", "Hit", "Room tone"). Separators misfile sounds, so label by sound, not by
-   stem: a clip's optional fourth value names the stem that holds it, `[start, end, label, stem]`. Drop what you
-   can't hear on a phone.
+   stem: a clip’s optional fourth value names the stem that holds it, `[start, end, label, stem]`. Drop what you
+   can’t hear on a phone.
 4. **Words.** The vocal clips start out as the heard phrases, with "Words?" where the stem sounds but nothing was
    heard. Whisper hears speech and voice-over well and often misses sung lines: name those by ear, or "Lyric unclear".
    Never invent words or sounds.
-5. **Tempo.** `bpm` and `barAnchor` come from the drum stem. If the song is edited to picture and bars don't hold
+5. **Tempo.** `bpm` and `barAnchor` come from the drum stem. If the song is edited to picture and bars don’t hold
    across edits, switch the ruler to seconds rather than guessing bar numbers.
 6. **Check.** Render stills across every act, read the clip labels at phone size, then watch the film once in real
    time.
@@ -118,21 +118,21 @@ post.
 |---|---|
 | **Aspect** | `"aspect": "4:5"` (1080 × 1350, the default) or `"9:16"`, the same frame on a 1080 × 1920 ground for Reels, TikTok and Shorts. |
 | **Stem source** | `prep.mjs --stems demucs` (the default: [Demucs](https://github.com/facebookresearch/demucs) on your machine), `--stems elevenlabs` (ElevenLabs stem separation with your own `ELEVENLABS_API_KEY`), or `--stems <folder>` for stems you already have (`drums.wav`, `vocals.mp3`…; name one `vocals` to get words). |
-| **Words** | `--words auto` (the default: none when the vocal stem is silent, Scribe when `ELEVENLABS_API_KEY` is set, otherwise whisper), `--words whisper` ([faster-whisper](https://github.com/SYSTRAN/faster-whisper)'s `small` on your machine, even with a key; `--whisper-model large-v3-turbo` hears more), `--words elevenlabs` (Scribe with your key, better at sung lines), or `--words none`. `--language en` when whisper guesses the language wrong. |
+| **Words** | `--words auto` (the default: none when the vocal stem is silent, Scribe when `ELEVENLABS_API_KEY` is set, otherwise whisper), `--words whisper` ([faster-whisper](https://github.com/SYSTRAN/faster-whisper)’s `small` on your machine, even with a key; `--whisper-model large-v3-turbo` hears more), `--words elevenlabs` (Scribe with your key, better at sung lines), or `--words none`. `--language en` when whisper guesses the language wrong. |
 | **Tracks** | Up to six lanes, each `{ "name", "stem", "clips" }`. Four or five read best on a phone. Two lanes may draw the same stem. |
 | **Dialogue and Song vocal** | When a film has both a song with vocals and spoken lines, give them two lanes from the same vocal stem: `Dialogue` (characters, a phone or PA, the announcer as `VO:`) and `Song vocal`. Split by what each line is. |
 | **Ruler** | `"ruler": "bars"` (the default: bar numbers and beat ticks from `bpm` and `barAnchor`) or `"seconds"` (for songs edited to picture; `bpm` is then optional). |
 | **Excerpt** | For networks that cap a video at 60 s: `node excerpt.mjs work/breakdown.json cut/ --from 36.9 --pull 75 --to 82`, in seconds of the full film, writes `cut/` with its own trimmed film, stems and spec. Start on an edit and a line. Pull back at most 52 s after `--from`, which leaves room for the end scene. The sound runs on to `--to` under the end scene and fades over the last `--fade` seconds (default 1.2). |
-| **End scene** | `"end": { "line": ["Every Acme post,", "in one place."], "posts": [...] }`: at least 3 of the brand's other videos, and 7 to 12 fill the wall best. Each is a file, a link (downloaded when you render) or `[file or link, from]`. A tile plays 8 s, from 1 s in unless you give `from`; render warns about short or dark ones. The scene starts at `pullBack` + 1.5 s + `hold`. Leave `end` out and the film ends on the whole film. |
-| **Brand mark** | `prep.mjs --avatar logo.png`, or `"avatar"` in the spec, shows the brand's mark bottom right. `"markKey": "white"` turns a black mark on white into a white mark; the default, `"black"`, keys a colour mark off black. |
-| **Style** | `"style": { "ground": "#15121a", "accent": "#ef6fa8", "light": true }`, each part optional. `ground` tints the background (window, timeline and end scene); keep it dark. `accent` marks only what is playing now: the playhead, the time, the playing shot's outline and the part of a sounding clip already played. `light` puts an ambient light behind the window, as an ambient-light TV lights the wall: each side glows faintly with the colours at that edge of the picture, led by its darker colours, drifting slowly behind cuts; it fades out before the timeline, is absent for the first 1.5 s and full by 6 s. `true` is the kept strength; a number from above 0 to 3 scales it. A square or vertical film keeps its picture only, so the light fills the window beside it. Pick both colours from the film itself. Leave `style` out for the default look. |
-| **Loudness** | The film's own mix, limited to −1.5 dBTP. Render prints the loudness and suggests `"gainDb"` (−24 to 12) when the mix is louder than −15 LUFS. |
+| **End scene** | `"end": { "line": ["Every Acme post,", "in one place."], "posts": [...] }`: at least 3 of the brand’s other videos, and 7 to 12 fill the wall best. Each is a file, a link (downloaded when you render) or `[file or link, from]`. A tile plays 8 s, from 1 s in unless you give `from`; render warns about short or dark ones. The scene starts at `pullBack` + 1.5 s + `hold`. Leave `end` out and the film ends on the whole film. |
+| **Brand mark** | `prep.mjs --avatar logo.png`, or `"avatar"` in the spec, shows the brand’s mark bottom right. `"markKey": "white"` turns a black mark on white into a white mark; the default, `"black"`, keys a colour mark off black. |
+| **Style** | `"style": { "ground": "#15121a", "accent": "#ef6fa8", "light": true }`, each part optional. `ground` tints the background (window, timeline and end scene); keep it dark. `accent` marks only what is playing now: the playhead, the time, the playing shot’s outline and the part of a sounding clip already played. `light` puts an ambient light behind the window, as an ambient-light TV lights the wall: each side glows faintly with the colours at that edge of the picture, led by its darker colours, drifting slowly behind cuts; it fades out before the timeline, is absent for the first 1.5 s and full by 6 s. `true` is the kept strength; a number from above 0 to 3 scales it. A square or vertical film keeps its picture only, so the light fills the window beside it. Pick both colours from the film itself. Leave `style` out for the default look. |
+| **Loudness** | The film’s own mix, limited to −1.5 dBTP. Render prints the loudness and suggests `"gainDb"` (−24 to 12) when the mix is louder than −15 LUFS. |
 | **Speed** | `render.mjs --jobs 4` renders on four processes (each needs about 2 GB of memory); the film is the same whatever the number. Decoded frames and render scratch go to `~/.cache/sound-breakdown` (`~/Library/Caches` on a Mac; `--cache <dir>` to move them). They take a few GB per minute of film; delete the folder whenever you like. |
 
 ## Spec reference
 
-Paths are relative to the spec's folder. Times are seconds in the film. Render checks the spec first and lists every
-problem at once, then checks that the film, every stem a lane draws and the end scene's posts are there before it
+Paths are relative to the spec’s folder. Times are seconds in the film. Render checks the spec first and lists every
+problem at once, then checks that the film, every stem a lane draws and the end scene’s posts are there before it
 decodes anything.
 
 | Field | Meaning |
@@ -145,11 +145,11 @@ decodes anything.
 | `shots` | `[[start, end, name], …]`, the V1 filmstrip |
 | `transitions` | seconds where a dissolve or wipe tab sits over an edit |
 | `lanes` | `[{ name, stem, clips: [[start, end, label, stem?], …] }, …]`, one audio track each |
-| `acts` | `[{ start, title }, …]`, the footer's numbered acts |
+| `acts` | `[{ start, title }, …]`, the footer’s numbered acts |
 | `pullBack`, `hold` | when the timeline pulls back to the whole film (before its own end card or legal text), and how long that holds (default 1.2 s) |
 | `end` | `{ line: [one or two lines], posts: [at least 3] }`, the end scene |
-| `avatar`, `markKey` | the brand's mark, and `black` or `white` keying |
-| `gainDb` | dB on the film's mix before the limiter |
+| `avatar`, `markKey` | the brand’s mark, and `black` or `white` keying |
+| `gainDb` | dB on the film’s mix before the limiter |
 | `aspect` | `4:5` (default) or `9:16` |
 | `style` | `{ ground, accent, light }`, each optional: a background colour, an accent for what is playing, and the ambient light (`true` or a strength) |
 | `url`, `_note`, `_…` | anything for your own records |
@@ -159,12 +159,12 @@ decodes anything.
 When the film is in the [posts.design](https://posts.design) library, the [posts.design MCP](../README.md) gives
 your agent a head start. `get_video_scenes` lists its scenes with times, a shot list to check against
 `prep/shots.jpg`, and `get_video_breakdown` names its beats, which are acts in waiting; both come with Pro, and a free account opens one film in full.
-`search_references` with `brand` and `format: "video"` lists the brand's other videos for the end scene: put the
+`search_references` with `brand` and `format: "video"` lists the brand’s other videos for the end scene: put the
 `video.url` of those whose `video.role` is `analysis` into `end.posts`, leaving out the film itself.
 
 To have an agent do all of this, use the sound-breakdown skill ([With your agent](#with-your-agent)).
 
-## How it's built
+## How it’s built
 
 | File | Job |
 |---|---|
@@ -172,8 +172,8 @@ To have an agent do all of this, use the sound-breakdown skill ([With your agent
 | `render.mjs` | spec to stills or film, and the sound |
 | `excerpt.mjs` | a shorter spec from a stretch of the film |
 | `lib/spec.mjs`, `lib/draft.mjs`, `lib/excerpt.mjs` | reading and checking a spec; drafting one; cutting one down |
-| `lib/timing.mjs`, `lib/layout.mjs` | the film's clock and geometry, as pure functions |
-| `lib/timeline.mjs` | the editor's timeline as SVG: ruler, filmstrip, waveform clips, playhead, acts |
+| `lib/timing.mjs`, `lib/layout.mjs` | the film’s clock and geometry, as pure functions |
+| `lib/timeline.mjs` | the editor’s timeline as SVG: ruler, filmstrip, waveform clips, playhead, acts |
 | `lib/light.mjs` | the ambient light behind the window (`style.light`) |
 | `lib/end-scene.mjs`, `lib/marquee.mjs`, `lib/streak.mjs` | the streak out of the film and the wall of posts |
 | `lib/film.mjs`, `lib/encode.mjs`, `lib/media.mjs` | a frame from a time; frames to H.264 on several processes; ffmpeg reads |
@@ -181,9 +181,9 @@ To have an agent do all of this, use the sound-breakdown skill ([With your agent
 
 Each frame is one SVG drawn from its time alone and rasterised by sharp, so frames can render in any order on
 several processes and still give the same film, byte for byte, for a given sharp and ffmpeg. `npm test` checks the
-spec, timing, layout, draft, excerpt, end-scene and render-split logic, and that `package.json`'s `files` lists
+spec, timing, layout, draft, excerpt, end-scene and render-split logic, and that `package.json`’s `files` lists
 everything the kit needs. A script can import `render()` from `render.mjs`; its one drawing hook, `lockup`, draws a
-mark under the end scene's wall (posts.design draws its own lockup there; this kit draws none).
+mark under the end scene’s wall (posts.design draws its own lockup there; this kit draws none).
 
 ## Licence
 
