@@ -1,35 +1,38 @@
 # posts.design MCP
 
-<!-- This README is also published as claude-directory/README.md: link files outside that folder (remake, the
-sound breakdown, direction breakdowns) by their full github.com address. -->
+<!-- This README is also published as claude-directory/README.md: link and embed files outside that folder (remake,
+the sound breakdown, direction breakdowns) by their full github.com or raw.githubusercontent.com address. -->
 
 Connect your agent to [posts.design](https://posts.design) and get back directions, examples and
 breakdowns to nail your next post’s design. posts.design is a hand-picked gallery of real social
 posts from top brands and their designers: launches, carousels, OG images and X headers.
 
+<p>
+  <img src="https://raw.githubusercontent.com/posts-design/mcp/main/skills/remake/examples/sunray.gif" width="49%" alt="A 16:9 remake for posts.design: a chat with an agent that answers with three dark launch films">
+  <img src="https://raw.githubusercontent.com/posts-design/mcp/main/skills/remake/examples/opendesign.gif" width="49%" alt="A 16:9 remake for posts.design: “Not just one style. Any colour. Any brand.”">
+</p>
+
+Two launch films from the gallery, remade for posts.design with the [remake](https://github.com/posts-design/mcp/tree/main/skills/remake) skill.
+
+[![Connect posts.design](https://img.shields.io/badge/Connect-posts.design-111111?style=for-the-badge)](https://posts.design/mcp)
+
 - **Server URL:** `https://posts.design/mcp` (Streamable HTTP)
 - **Sign-in:** OAuth with your posts.design account, or a personal key from
   [Settings → MCP](https://posts.design/settings?section=mcp)
-- **Cost:** 100 credits a month on a free account, 1,000 with [Pro](https://posts.design/pricing)
-- **About:** [posts.design/mcp](https://posts.design/mcp)
+- **Cost:** 100 credits a month on a free account, 1,000 with [Pro](https://posts.design/pricing). Video breakdowns and
+  remakes come with Pro; a free account opens one film in full
 
-This repository holds the server’s documentation, its
-[MCP Registry](https://registry.modelcontextprotocol.io) listing (`design.posts/mcp`), its
-Claude Code, Antigravity and Cursor plugins, its [skills](#skills) and the open-source
-[sound breakdown kit](#sound-breakdown-kit).
-The server itself is hosted by posts.design and is not open source.
+## What you can ask for
 
-## Remake a launch video
-
-Find a video you like in the posts.design gallery and remake it for your own product, with your words, logo, colours
-and fonts, using the [remake](https://github.com/posts-design/mcp/tree/main/skills/remake) skill in Claude Code. The film renders on your machine.
-
-```text
-/plugin marketplace add posts-design/mcp
-/plugin install posts-design@posts-design
-```
-
-Then run `/mcp`, choose posts.design and sign in, and ask: “Remake [video link] for [your product]”.
+| Ask your agent | You get |
+|---|---|
+| “Remake [posts.design video link] for [your product]” | That film rebuilt shot by shot with your words, logo, colours and fonts, rendered on your machine, in Claude Code ([examples](https://github.com/posts-design/mcp/tree/main/skills/remake)) |
+| “Break down [posts.design video link]” | How the film is directed: the hook, timed beats, type, colour and end card, each tied to a still ([example](https://github.com/posts-design/mcp/tree/main/direction-breakdowns)) |
+| “Find launch references for my invoicing app’s funding announcement” | The closest real launch posts, each credited, and a direction for yours |
+| “How does Linear launch features?” | Its recurring patterns, what changed and what to borrow |
+| “Plan a 30-second launch video for my app” | Beats with timings, type, colour and the end card, from real launch videos |
+| “Make an OG image for this page” | A direction from real OG images, built in your project |
+| “Make a sound breakdown of [film]” | The film over an editor’s timeline of itself, rendered on your machine, in Claude Code or with the kit ([example](https://github.com/posts-design/mcp/tree/main/breakdown)) |
 
 ## Set up
 
@@ -51,9 +54,8 @@ install it, then sign in. Or add it yourself: Plugins → Add custom MCP server 
 /plugin install posts-design@posts-design
 ```
 
-Then run `/mcp`, choose posts.design and sign in. Ask, for example: “Find launch references for my invoicing app’s
-funding announcement”, “How does Linear launch features?” or “Plan a 30-second launch video for my app”. If you
-added the server by hand before, remove it (`claude mcp remove posts`) so you sign in once.
+Then run `/mcp`, choose posts.design and sign in. Then ask for anything in
+[What you can ask for](#what-you-can-ask-for). If you added the server by hand before, remove it (`claude mcp remove posts`) so you sign in once.
 
 For the server alone, add it yourself, with `--header "Authorization: Bearer <your-key>"` to use a personal key:
 
@@ -109,7 +111,7 @@ Once connected, ask your agent to call `get_my_access` to confirm.
 
 | Tool | Title | What it does | Plan |
 |---|---|---|---|
-| `search_references` | Search references | Search the published library by what you’re making: a launch video, a hiring post, an OG image. Filters by format and category | Free |
+| `search_references` | Search references | Search the published library by what you’re making: a launch video, a hiring post, an OG image. Filters by format, category, style, colour and brand | Free |
 | `get_reference` | Get reference | Open one post, OG image or X header: attribution, dates, classification and all its media links, plus a video’s stills at its shot changes | Free |
 | `search_saved_references` | Search saves | Search or list everything you’ve saved on posts.design | Free |
 | `get_saved_reference` | Get saved reference | Open one saved reference with all its assets | Free |
@@ -183,9 +185,16 @@ are measured on your machine (or by ElevenLabs with your own key) and the film r
 film to the finished breakdown. MIT licensed, and provided
 [as is](https://github.com/posts-design/mcp/blob/main/breakdown/README.md#licence).
 
+## About this repository
+
+It holds the server’s documentation, its [MCP Registry](https://registry.modelcontextprotocol.io) listing
+(`design.posts/mcp`), its Claude Code, Antigravity and Cursor plugins, its [skills](#skills) and the open-source
+[sound breakdown kit](#sound-breakdown-kit). The server itself is hosted by posts.design and is not open source.
+More about it: [posts.design/mcp](https://posts.design/mcp).
+
 ## Help
 
 Open an [issue](https://github.com/posts-design/mcp/issues).
 
-Documentation and the breakdown kit in this repository are MIT licensed; the posts.design name and
+Documentation, skills and the breakdown kit in this repository are MIT licensed; the posts.design name and
 logo are not. The posts in the library belong to their authors.

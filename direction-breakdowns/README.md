@@ -17,7 +17,7 @@ Connect posts.design to Claude, ChatGPT, Claude Code or any MCP client: [posts.d
 has the steps. Then ask:
 
 ```text
-Break down [video link from posts.design]
+Break down [posts.design video link]
 ```
 
 No video in mind? Ask for launch videos like the one you’re making, and pick one.
