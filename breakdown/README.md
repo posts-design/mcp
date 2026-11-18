@@ -158,7 +158,7 @@ decodes anything.
 
 When the film is in the [posts.design](https://posts.design) library, the [posts.design MCP](../README.md) gives
 your agent a head start. `get_video_scenes` lists its scenes with times, a shot list to check against
-`prep/shots.jpg`, and `get_video_breakdown` names its beats, which are acts in waiting; both come with Pro.
+`prep/shots.jpg`, and `get_video_breakdown` names its beats, which are acts in waiting; both come with Pro, and a free account opens one film in full.
 `search_references` with `brand` and `format: "video"` lists the brand's other videos for the end scene: put the
 `video.url` of those whose `video.role` is `analysis` into `end.posts`, leaving out the film itself.
 
