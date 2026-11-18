@@ -59,7 +59,9 @@ Write the hook, the caption and the script first, then the beats:
 
 Keep it original rather than a copy of one reference. If you used a playbook, run its checks and say which pass in the
 plan and which the person can only check after posting. Without a playbook, check that the hook lands in the first two
-seconds with the sound off and that the end card names the product, the line and where to go. Use their real product,
+seconds with the sound off, that the moment they'd keep if the film were half as long comes early and gets the most
+time, that every word and interface detail it depends on reads at phone feed size, and that the end card names the
+product, the line and where to go. Use their real product,
 footage or UI in the plan, never a drawn stand-in, and list any fact you assumed about the product for them to confirm.
 
 Cite every reference with its posts.design link and its original source.
