@@ -19,7 +19,7 @@ they choose ElevenLabs.
    about any choice that applies. Check first whether `ELEVENLABS_API_KEY` is set (`[ -n "$ELEVENLABS_API_KEY" ] &&
    echo set`; never print it) and, on Linux, whether `nvidia-smi` finds an NVIDIA GPU.
    - **Always:** `npm install` for sharp, which renders (about 10 MB), and numpy for measuring, about 17 MB.
-   - **Stems:** Demucs on their machine with the CPU-only PyTorch, about 250 MB, and a 55 MB model on the first prep.
+   - **Stems:** Demucs on their machine with the CPU-only PyTorch, about 1.2 GB, and a 55 MB model on the first prep.
      With the key set, ask: ElevenLabs separates the stems with nothing to install, on their ElevenLabs plan, or
      Demucs keeps them on the machine. With an NVIDIA GPU on Linux, also ask whether they want the CUDA PyTorch,
      which separates faster and is about 3 GB.

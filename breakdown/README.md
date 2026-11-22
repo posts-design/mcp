@@ -64,7 +64,7 @@ what to install. Sizes are for Linux; a Mac’s PyTorch is smaller.
 | Step | Default | Download | Lighter |
 |---|---|---|---|
 | Measuring | numpy | about 17 MB | |
-| Stems | Demucs, with the CPU-only PyTorch | about 250 MB, and a 55 MB model on the first prep. Leave out the PyTorch index only on Linux with an NVIDIA GPU, for the CUDA build (about 3 GB). | `--stems elevenlabs` with your `ELEVENLABS_API_KEY`, or `--stems <folder>`: nothing |
+| Stems | Demucs, with the CPU-only PyTorch | about 1.2 GB (measured on Linux with Python 3.14), and a 55 MB model on the first prep. Leave out the PyTorch index only on Linux with an NVIDIA GPU, for the CUDA build (about 3 GB). | `--stems elevenlabs` with your `ELEVENLABS_API_KEY`, or `--stems <folder>`: nothing |
 | Words | none when the vocal stem is silent; ElevenLabs Scribe when `ELEVENLABS_API_KEY` is set; otherwise faster-whisper’s `small` | faster-whisper about 130 MB, and the `small` model, about 490 MB, the first time it hears words (`--whisper-model large-v3-turbo` hears more: 1.6 GB) | the key, or `--words none`: nothing |
 
 With an ElevenLabs key and `--stems elevenlabs`, numpy is all the Python you install. Rendering needs no Python; see

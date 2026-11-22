@@ -16,7 +16,7 @@
 // It writes into <folder>: the film, stems/, prep/ (analysis.json, words.txt, shots.jpg, stems.png) and
 // breakdown.json, the draft spec. A spec that already exists is never overwritten; re-running reuses the stems.
 import { execFileSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
@@ -24,28 +24,12 @@ import { draftSpec } from "./lib/draft.mjs";
 import { readArgs, runCli } from "./lib/cli.mjs";
 import { COLOR } from "./lib/layout.mjs";
 import { audioFiles, probe, requireTools, sha12, stemFile } from "./lib/media.mjs";
+import { elevenlabs, hasKey, requireModule, separate } from "./lib/stems.mjs";
 import { FONT, esc, requireFont } from "./lib/svg.mjs";
 
 const KIT = path.dirname(fileURLToPath(import.meta.url));
 const run = (cmd, args) => execFileSync(cmd, args, { stdio: ["ignore", "pipe", "inherit"], maxBuffer: 64 * 1024 ** 2 }).toString().trim();
-/** Unzips stems flat into a folder: a zip that keeps them in a subfolder still gives <folder>/<name>.mp3. */
-const UNZIP_FLAT = `
-import os, sys, zipfile
-with zipfile.ZipFile(sys.argv[1]) as z:
-    for item in z.infolist():
-        name = os.path.basename(item.filename)
-        if name and not item.is_dir():
-            with open(os.path.join(sys.argv[2], name), "wb") as f:
-                f.write(z.read(item))
-`;
-/** A stem's name as a spec uses it: "Lead Vocals.wav" becomes lead-vocals. */
-const stemName = (file) => path.parse(file).name.toLowerCase().replace(/[^a-z0-9_-]+/g, "-").replace(/^-+|-+$/g, "") || "stem";
-const KEY = Boolean(process.env.ELEVENLABS_API_KEY);
-/** Stops before a long step when the Python lacks a package it needs, saying how to install it or what to use instead. */
-function requireModule(python, module, install) {
-  try { execFileSync(python, ["-I", "-c", `import importlib.util, sys; sys.exit(importlib.util.find_spec("${module}") is None)`], { stdio: "ignore" }); }
-  catch { throw new Error(`${python} has no ${module}. ${install} The README's "What it downloads" has the sizes.`); }
-}
+const KEY = hasKey();
 
 runCli(async () => {
   const { values, positionals: [input, folder] } = readArgs(process.argv.slice(2), ["stems", "words", "whisper-model", "language", "avatar", "python"]);
@@ -75,37 +59,8 @@ runCli(async () => {
   const haveStems = () => existsSync(STEMS) && audioFiles(STEMS).length > 0;
   if (haveStems()) console.log("reusing stems/ (delete it to separate again)");
   else {
-    if (stemSource === "demucs") requireModule(python, "demucs", "Install it with pip install -r py/requirements-demucs.txt "
-      + "--extra-index-url https://download.pytorch.org/whl/cpu, or use --stems elevenlabs (with ELEVENLABS_API_KEY set) or --stems <folder>.");
     if (KEY && !values.stems) console.log("ELEVENLABS_API_KEY is set: --stems elevenlabs separates with it instead of Demucs");
-    mkdirSync(STEMS, { recursive: true });
-    const mix = path.join(PREP, "mix.wav"), out = path.join(PREP, "demucs"), zip = path.join(PREP, "stems.zip");
-    // working files have fixed names and go when the step ends, so a stopped run's leftovers never pile up
-    try {
-      run("ffmpeg", ["-v", "error", "-y", "-i", SRC, "-vn", "-ac", "2", "-ar", "44100", mix]);
-      if (stemSource === "demucs") {
-        // htdemucs_6s: drums, bass, vocals, guitar, piano, other; written beside the stems, so moving them never crosses disks
-        console.log("separating stems with Demucs (a few minutes on a laptop CPU)…");
-        execFileSync(python, ["-m", "demucs", "-n", "htdemucs_6s", "--mp3", "-o", out, mix], { stdio: "inherit" });
-        const made = path.join(out, "htdemucs_6s", "mix");
-        for (const f of readdirSync(made)) renameSync(path.join(made, f), path.join(STEMS, f));
-      } else if (stemSource === "elevenlabs") {
-        console.log("separating stems with ElevenLabs (uses your ELEVENLABS_API_KEY)…");
-        writeFileSync(zip, Buffer.from(await (await elevenlabs("/music/stem-separation?output_format=mp3_44100_192", mix)).arrayBuffer()));
-        run(python, ["-I", "-c", UNZIP_FLAT, zip, STEMS]);
-      } else {
-        if (!existsSync(stemSource)) throw new Error(`--stems ${stemSource}: expected demucs, elevenlabs or a folder of stems`);
-        for (const f of audioFiles(stemSource)) copyFileSync(path.join(stemSource, f), path.join(STEMS, f));
-      }
-    } finally {
-      for (const tmp of [mix, out, zip]) rmSync(tmp, { recursive: true, force: true });
-    }
-    if (!haveStems()) throw new Error(`no stems in ${STEMS}`);
-    // one plainly named file per stem, so a spec can name it
-    const files = audioFiles(STEMS), names = files.map(stemName);
-    const twice = names.filter((n, i) => names.indexOf(n) !== i);
-    if (twice.length) throw new Error(`two stems would both be called "${twice[0]}" in ${STEMS}; rename one`);
-    files.forEach((f, i) => { const to = names[i] + path.extname(f).toLowerCase(); if (to !== f) renameSync(path.join(STEMS, f), path.join(STEMS, to)); });
+    await separate(SRC, STEMS, { source: stemSource, python, work: PREP });
   }
   const stemPath = (name) => stemFile(STEMS, name);
   const stems = audioFiles(STEMS);
@@ -195,15 +150,3 @@ runCli(async () => {
   console.log(`prep/: analysis.json, words.txt (${words.length} words), shots.jpg, stems.png.`
     + ` Next: name everything, then node render.mjs ${path.relative(process.cwd(), SPEC)} --stills …`);
 });
-
-/** One ElevenLabs request with the person's own key: a file upload, the response returned for reading. */
-async function elevenlabs(endpoint, file, fields = {}) {
-  const key = process.env.ELEVENLABS_API_KEY;
-  if (!key) throw new Error("set ELEVENLABS_API_KEY to use ElevenLabs, or use --stems demucs / --words whisper or none");
-  const form = new FormData();
-  for (const [k, v] of Object.entries(fields)) form.append(k, v);
-  form.append("file", new Blob([readFileSync(file)]), path.basename(file));
-  const res = await fetch(`https://api.elevenlabs.io/v1${endpoint}`, { method: "POST", headers: { "xi-api-key": key }, body: form });
-  if (!res.ok) throw new Error(`ElevenLabs ${endpoint}: HTTP ${res.status} ${(await res.text()).slice(0, 300)}`);
-  return res;
-}
