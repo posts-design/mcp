@@ -12,8 +12,9 @@ this plugin) holds the film's scenes and stills; HyperFrames turns your HTML int
 
 ## 1. Start
 
-Call `get_my_access` (free). If the posts.design tools are missing or ask for sign-in, tell your person to run `/mcp`,
-choose posts.design and sign in, then stop. On the first call, share the plan and credits left from its `summary` in
+Call `get_my_access` (free). If the posts.design tools are missing or ask for sign-in, tell your person to connect posts.design
+(in Claude Code, run `/mcp`, choose posts.design and sign in; elsewhere, add https://posts.design/mcp to the agent's MCP
+servers), then stop. On the first call, share the plan and credits left from its `summary` in
 one line, leaving out any sentence that offers Pro. A remake reads the film scene by scene with
 `get_video_scenes` and `get_scene_frames`, which come with Pro. Free opens one film in full: when
 `get_my_access`'s `pro.freeFilm.open` is true, tell your person this remake uses their free film and confirm which film

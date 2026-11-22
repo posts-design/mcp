@@ -79,6 +79,15 @@ url = "https://posts.design/mcp"
 http_headers = { Authorization = "Bearer <your-key>" }
 ```
 
+**Skills in any other agent** (Cursor, Codex and more):
+
+```bash
+npx skills add posts-design/mcp
+```
+
+Add one skill with `--skill remake`. The skills use the server, so add `https://posts.design/mcp` to the
+agent's MCP servers too and sign in.
+
 **Cursor:** paste this link into your browser to add posts.design, then sign in when Cursor opens
 posts.design:
 

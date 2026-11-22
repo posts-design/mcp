@@ -11,8 +11,9 @@ posts.design MCP (the `posts` server in this plugin) holds the library; every im
 
 ## 1. Start
 
-Call `get_my_access` (free). If the posts.design tools are missing or ask for sign-in, tell your person to run `/mcp`,
-choose posts.design and sign in with a free account, then stop: don't answer from memory. On the first call of the
+Call `get_my_access` (free). If the posts.design tools are missing or ask for sign-in, tell your person to connect posts.design and sign in with a free account
+(in Claude Code, run `/mcp` and choose posts.design; elsewhere, add https://posts.design/mcp to the agent's MCP servers),
+then stop: don't answer from memory. On the first call of the
 conversation, share the plan and credits left from its `summary` in one line, leaving out any sentence that offers Pro.
 A search page or an opened reference costs one credit; this skill spends one to three.
 
