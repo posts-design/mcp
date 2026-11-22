@@ -18,7 +18,8 @@
     "test/excerpt.test.mjs", "test/layout.test.mjs", "test/light.test.mjs", "test/package.test.mjs", "test/render.test.mjs",
     "test/spec.test.mjs", "test/timing.test.mjs"
   ],
-  "unlisted": ["layer.mjs", "lib/layer.mjs", "test/layer.test.mjs"],
+  "unlisted": ["layer.mjs", "djmix.mjs", "lib/audio.mjs", "lib/layer.mjs", "lib/djmix.mjs", "test/layer.test.mjs",
+    "test/djmix.test.mjs"],
   "scripts": {
     "prep": "node prep.mjs",
     "render": "node render.mjs",

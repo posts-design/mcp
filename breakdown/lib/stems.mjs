@@ -38,9 +38,10 @@ export async function separate(input, stems, { source = "demucs", python, work }
   try {
     execFileSync("ffmpeg", ["-v", "error", "-y", "-i", input, "-vn", "-ac", "2", "-ar", "44100", mix], { stdio: ["ignore", "ignore", "inherit"] });
     if (source === "demucs") {
-      // htdemucs_6s: drums, bass, vocals, guitar, piano, other; written beside the stems, so moving them never crosses disks
+      // htdemucs_6s: drums, bass, vocals, guitar, piano, other; written beside the stems, so moving them never crosses disks.
+      // WAV, not --mp3: its MP3s carry about 26 ms of encoder lead-in ffmpeg can't see, which put every stem late
       console.log("separating stems with Demucs (a few minutes on a laptop CPU)…");
-      execFileSync(python, ["-m", "demucs", "-n", "htdemucs_6s", "--mp3", "-o", out, mix], { stdio: "inherit" });
+      execFileSync(python, ["-m", "demucs", "-n", "htdemucs_6s", "-o", out, mix], { stdio: "inherit" });
       const made = path.join(out, "htdemucs_6s", "mix");
       for (const f of readdirSync(made)) renameSync(path.join(made, f), path.join(stems, f));
     } else if (source === "elevenlabs") {
