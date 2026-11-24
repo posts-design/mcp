@@ -127,6 +127,14 @@ Once connected, ask your agent to call `get_my_access` to confirm.
 | `get_saved_asset` | Get saved asset | Read one asset of a saved reference, with a preview image when one fits | Free |
 | `save_reference` | Save reference | Save a post, OG image or X header to your Saves, when you ask | Free |
 | `unsave_reference` | Remove from Saves | Remove one reference from your Saves, when you ask | Free |
+| `list_collections` | List collections | List your collections and your team’s, with each one’s name, size and public link | Pro or Team |
+| `get_collection` | Get collection | Read one page of a collection’s references | Pro or Team |
+| `create_collection` | Create collection | Create a collection for you or your team, when you ask | Pro or Team |
+| `rename_collection` | Rename collection | Rename one of your or your team’s collections, when you ask | Pro or Team |
+| `add_to_collection` | Add to collection | Add a reference to a collection, when you ask; adding it to your own collection also saves it | Pro or Team |
+| `remove_from_collection` | Remove from collection | Take a reference out of a collection, when you ask; it stays in your Saves | Pro or Team |
+| `share_collection` | Share collection link | Make a public, read-only link to a team collection, when you ask: anyone with the link can see it | Team |
+| `unshare_collection` | Stop sharing collection | Turn off a team collection’s public link for everyone, when you ask | Team |
 | `get_my_access` | My access and credits | Show what this connection may read and how many credits are left | Free |
 | `list_playbooks` | List launch playbooks | List the formats for a launch film or a raise announcement, with when to use each and its runtime | Free |
 | `get_video_breakdown` | Video breakdown | How a video is directed: structure, hook, timed beats, type, colour, end card and what to borrow, each tied to a still ([example](https://github.com/posts-design/mcp/tree/main/direction-breakdowns)) | Pro |
@@ -179,10 +187,15 @@ logo as SVG and a real screenshot of the product.
 
 ## What it can and can’t do
 
-- It reads the published library and your own Saves, and changes your Saves only when you ask.
-  It can’t post, publish or delete anything else. Sign-in asks for exactly that
-  (`references:read`, `saved:read`, `saved:write`).
-- Saving and removing are free, and each one is logged on your account.
+- It reads the published library and your own Saves and collections, and changes them only when you ask: it
+  saves and removes references, and creates, renames, adds to and takes references out of collections. With a
+  team, it can also make a team collection’s public, read-only link or turn that link off, which changes who can
+  see that collection. It can’t post, pay, or delete a collection, your account or anything else. Sign-in asks for
+  exactly that (`references:read`, `saved:read`, `saved:write`).
+- These changes are free, and each one is logged on your account.
+- Results promote posts.design’s own paid plan: on a free account, a Pro tool, the monthly credit limit and
+  `get_my_access` reply with a line about Pro and a link to its pricing page, and agents may say when Pro would
+  help, as the skills’ With Pro column does. There are no ads or affiliate links.
 - Results credit each post’s brand and author.
 
 ## Sound breakdown kit
