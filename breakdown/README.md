@@ -65,6 +65,7 @@ what to install. Sizes are for Linux; a Mac’s PyTorch is smaller.
 |---|---|---|---|
 | Measuring | numpy | about 17 MB | |
 | Stems | Demucs, with the CPU-only PyTorch | about 1.2 GB (measured on Linux with Python 3.14), and a 55 MB model on the first prep. Leave out the PyTorch index only on Linux with an NVIDIA GPU, for the CUDA build (about 3 GB). | `--stems elevenlabs` with your `ELEVENLABS_API_KEY`, or `--stems <folder>`: nothing |
+| Stems for `layer.mjs` | [SCNet XL](https://arxiv.org/abs/2401.13276), with the same PyTorch | a 214 MB model on the first run, checked against its SHA-256; about 8 minutes per minute of music on an 8-core CPU (Demucs: a few minutes, and less clean) | `--stems demucs`, `--stems elevenlabs` or `--stems <folder>` |
 | Words | none when the vocal stem is silent; ElevenLabs Scribe when `ELEVENLABS_API_KEY` is set; otherwise faster-whisper’s `small` | faster-whisper about 130 MB, and the `small` model, about 490 MB, the first time it hears words (`--whisper-model large-v3-turbo` hears more: 1.6 GB) | the key, or `--words none`: nothing |
 
 With an ElevenLabs key and `--stems elevenlabs`, numpy is all the Python you install. Rendering needs no Python; see
@@ -154,6 +155,17 @@ decodes anything.
 | `style` | `{ ground, accent, light }`, each optional: a background colour, an accent for what is playing, and the ambient light (`true` or a strength) |
 | `url`, `_note`, `_…` | anything for your own records |
 
+## Layered sound
+
+`layer.mjs` scores a film with a music track you made or hold the rights to: the track is split into stems, and its
+instruments enter and leave with the story (the melody alone, hi-hats, kick and bass on the film’s turn, a breath
+before the logo, everything back on it), with four accents, mastered to −16 LUFS. Its header lists the options; the
+[layered-sound skill](../skills/layered-sound/README.md) is the way to run it with an agent.
+
+```bash
+node layer.mjs film.mp4 track.mp3 work/ --land 8 --logo 24 --python .venv/bin/python
+```
+
 ## With posts.design
 
 When the film is in the [posts.design](https://posts.design) library, the [posts.design MCP](../README.md) gives
@@ -178,13 +190,20 @@ To have an agent do all of this, use the sound-breakdown skill ([With your agent
 | `lib/end-scene.mjs`, `lib/marquee.mjs`, `lib/streak.mjs` | the streak out of the film and the wall of posts |
 | `lib/film.mjs`, `lib/encode.mjs`, `lib/media.mjs` | a frame from a time; frames to H.264 on several processes; ffmpeg reads |
 | `py/analyse.py`, `py/words.py` | shot, tempo and stem measurement; local transcription |
+| `layer.mjs`, `lib/layer.mjs`, `lib/audio.mjs` | layered sound: the arc, the cut on the track's bars, mixing and mastering |
+| `lib/scnet.mjs`, `py/scnet_separate.py`, `py/scnet/` | SCNet stem separation and its model download |
 
 Each frame is one SVG drawn from its time alone and rasterised by sharp, so frames can render in any order on
 several processes and still give the same film, byte for byte, for a given sharp and ffmpeg. `npm test` checks the
-spec, timing, layout, draft, excerpt, end-scene and render-split logic, and that `package.json`’s `files` lists
-everything the kit needs. A script can import `render()` from `render.mjs`; its one drawing hook, `lockup`, draws a
-mark under the end scene’s wall (posts.design draws its own lockup there; this kit draws none).
+spec, timing, layout, draft, excerpt, end-scene and render-split logic, layered sound’s arc and cut, that a model
+with the wrong hash is refused, and that `package.json`’s `files` lists everything the kit needs. A script can import
+`render()` from `render.mjs`; its one drawing hook, `lockup`, draws a mark under the end scene’s wall (posts.design
+draws its own lockup there; this kit draws none).
 
 ## Licence
 
-MIT. This is free tooling, provided as is: you answer for the films you break down and the breakdowns you post.
+MIT. This is free tooling, provided as is: you answer for the films you break down and the breakdowns you post, and
+for the music you score them with. `py/scnet/` is SCNet by starrytong and ZFTurbo, also MIT
+([py/scnet/LICENSE](py/scnet/LICENSE)); its model downloads from the
+[Music-Source-Separation-Training](https://github.com/ZFTurbo/Music-Source-Separation-Training) releases, whose
+weights are that project's own: check its terms for your use.

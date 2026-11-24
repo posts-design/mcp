@@ -16,10 +16,11 @@
     "py/analyse.py", "py/requirements.txt", "py/requirements-demucs.txt",
     "py/requirements-whisper.txt", "py/words.py", "test/draft.test.mjs", "test/end-scene.test.mjs",
     "test/excerpt.test.mjs", "test/layout.test.mjs", "test/light.test.mjs", "test/package.test.mjs", "test/render.test.mjs",
-    "test/spec.test.mjs", "test/timing.test.mjs"
+    "test/spec.test.mjs", "test/timing.test.mjs",
+    "layer.mjs", "lib/audio.mjs", "lib/layer.mjs", "lib/scnet.mjs", "py/scnet_separate.py", "py/scnet/__init__.py",
+    "py/scnet/scnet.py", "py/scnet/separation.py", "py/scnet/LICENSE", "test/layer.test.mjs", "test/scnet.test.mjs"
   ],
-  "unlisted": ["layer.mjs", "djmix.mjs", "lib/audio.mjs", "lib/layer.mjs", "lib/djmix.mjs", "test/layer.test.mjs",
-    "test/djmix.test.mjs"],
+  "unlisted": ["djmix.mjs", "lib/djmix.mjs", "test/djmix.test.mjs"],
   "scripts": {
     "prep": "node prep.mjs",
     "render": "node render.mjs",

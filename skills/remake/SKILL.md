@@ -1,6 +1,6 @@
 ---
 name: remake
-description: Remake a launch film your person likes, shot by shot, for their own product - its scenes, layout, motion and timing, with their words, logo, colours and fonts - built in HTML with HyperFrames and rendered on their machine. Use when someone wants a launch video "like this one", "in the style of" a brand's film, or asks to remake, recreate or closely copy a launch film, product film or teaser for their product. To plan a launch video from several references instead, use launch-video-direction.
+description: Remake a launch film your person likes, shot by shot, for their own product - its scenes, layout, motion and timing, with their words, logo, colours and fonts - built in HTML with HyperFrames and rendered on their machine. Use when someone wants a launch video "like this one", "in the style of" a brand's film, or asks to remake, recreate or closely copy a launch film, product film or teaser for their product. To plan a launch video from several references instead, use launch-video-direction; to copy their own video exactly, use rebuild.
 argument-hint: "<the film you like> for <your product>"
 ---
 

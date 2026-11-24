@@ -34,13 +34,15 @@ export function requireTools() {
   }
 }
 
-/** The first 12 hex of a file's SHA-256, streamed. */
-export function sha12(file) {
+/** A file's SHA-256 in hex, streamed. */
+export function sha256(file) {
   return new Promise((resolve, reject) => {
     const h = createHash("sha256");
-    createReadStream(file).on("data", (d) => h.update(d)).on("error", reject).on("end", () => resolve(h.digest("hex").slice(0, 12)));
+    createReadStream(file).on("data", (d) => h.update(d)).on("error", reject).on("end", () => resolve(h.digest("hex")));
   });
 }
+/** The first 12 hex of a file's SHA-256. */
+export const sha12 = async (file) => (await sha256(file)).slice(0, 12);
 
 /**
  * Duration (the container's), frame rate, size as shown (a phone video stored turned is turned back, as ffmpeg
