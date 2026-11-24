@@ -24,7 +24,12 @@ runCli(async () => {
     console.error("usage: node excerpt.mjs <breakdown.json> <folder> --from <s> --pull <s> --to <s> [--fade <s>]");
     process.exit(2);
   }
-  const raw = JSON.parse(readFileSync(specFile, "utf8")), base = path.dirname(path.resolve(specFile)), at = (p) => path.resolve(base, p);
+  const raw = JSON.parse(readFileSync(specFile, "utf8")), base = path.dirname(path.resolve(specFile));
+  const at = (p) => {
+    const resolved = path.resolve(base, p);
+    if (resolved !== base && !resolved.startsWith(base + path.sep)) throw new Error(`${p}: escapes ${base}`);
+    return resolved;
+  };
   parseSpec(raw);
   const DIR = path.resolve(folder), OUT = path.join(DIR, "breakdown.json");
   if (existsSync(OUT)) throw new Error(`${OUT} exists; delete it to cut again`);
