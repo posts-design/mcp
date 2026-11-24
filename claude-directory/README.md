@@ -135,7 +135,7 @@ Once connected, ask your agent to call `get_my_access` to confirm.
 | `get_scene_clip` | Scene clip | A short silent MP4 of one scene, as a link that expires in an hour | Pro |
 | `get_playbook` | Get launch playbook | One launch format in full: a beat sheet with timings, checks and real launches to study | Pro |
 
-On a free account, one film opens in full with the four video tools, the first one you read; other films and `get_playbook` reply with a link to Pro instead of answering, and use no credits.
+On a free account, one film opens in full with the four video tools, the first one you read; other films and `get_playbook` reply with what is ready (a film’s beats and scenes, a playbook’s beats, hooks and checks, as counts) and a link to Pro instead of answering, and use no credits.
 
 **Credits:** one credit is one request: a search, a page of results, a post, a breakdown or a saved
 item. Repeating a request, a failed request and `get_my_access` are free, and downloading media or
@@ -160,19 +160,19 @@ server for references. Your agent picks one when your request fits, or run it yo
 `/posts-design:launch-brief`. In other agents, copy a skill’s folder into your agent’s skills. With the plugin, you
 don’t need the starter prompts above: the first three skills are fuller versions of them.
 
-| Skill | Ask for | You get |
-|---|---|---|
-| [launch-references](skills/launch-references/SKILL.md) | Examples for your launch post | The closest launch posts and a direction for yours |
-| [competitor-audit](skills/competitor-audit/SKILL.md) | How a brand launches | Its recurring patterns, what changed, what to borrow |
-| [launch-video-direction](skills/launch-video-direction/SKILL.md) | A plan for your launch video | Beats with timings, type, colour and the end card, from real launch videos |
-| [launch-brief](skills/launch-brief/SKILL.md) | A brief from a one-line idea | One committed look, moves worth copying and numbered beats, each from a real launch |
-| [launch-copy](skills/launch-copy/SKILL.md) | The caption for your launch post | Three drafts shaped like real launch captions, or edits to yours |
-| [og-image](skills/og-image/SKILL.md) | A link preview image for a page | A direction from real OG images, built in your project |
-| [x-header](skills/x-header/SKILL.md) | An X profile header | A direction from real brand headers, made at 1500×500 |
-| [sound-breakdown](https://github.com/posts-design/mcp/blob/main/skills/sound-breakdown/SKILL.md) | A sound breakdown of a film you give it | The film over an editor’s timeline of itself, rendered on your machine |
-| [layered-sound](https://github.com/posts-design/mcp/tree/main/skills/layered-sound) | Music for your film, from a track you hold the rights to | The track’s instruments entering and leaving with the story, with accents, mixed on your machine |
-| [remake](https://github.com/posts-design/mcp/tree/main/skills/remake) | A launch film like one you like, for your product | That film remade shot by shot in your brand, rendered on your machine (Pro, or your one free film) |
-| [rebuild](https://github.com/posts-design/mcp/tree/main/skills/rebuild) | Your own video as code | The same video rebuilt frame by frame in HTML, ready to edit its words, colours, size or language and render again |
+| Skill | Ask for | You get | With [Pro](https://posts.design/pricing) |
+|---|---|---|---|
+| [launch-references](skills/launch-references/SKILL.md) | Examples for your launch post | The closest launch posts and a direction for yours | 10× the credits, for wider searches |
+| [competitor-audit](skills/competitor-audit/SKILL.md) | How a brand launches | Its recurring patterns, what changed, what to borrow | How each of the brand’s videos is directed, beat by beat |
+| [launch-video-direction](skills/launch-video-direction/SKILL.md) | A plan for your launch video | Beats with timings, type, colour and the end card, from real launch videos | A full launch playbook, and the closest films broken down beat by beat |
+| [launch-brief](skills/launch-brief/SKILL.md) | A brief from a one-line idea | One committed look, moves worth copying and numbered beats, each from a real launch | Exact moments from film breakdowns, scenes up close and a full playbook |
+| [launch-copy](skills/launch-copy/SKILL.md) | The caption for your launch post | Three drafts shaped like real launch captions, or edits to yours | 10× the credits, for wider searches |
+| [og-image](skills/og-image/SKILL.md) | A link preview image for a page | A direction from real OG images, built in your project | 10× the credits, for wider searches |
+| [x-header](skills/x-header/SKILL.md) | An X profile header | A direction from real brand headers, made at 1500×500 | 10× the credits, for wider searches |
+| [sound-breakdown](https://github.com/posts-design/mcp/blob/main/skills/sound-breakdown/SKILL.md) | A sound breakdown of a film you give it | The film over an editor’s timeline of itself, rendered on your machine | Scene times and beats for any film in the library |
+| [layered-sound](https://github.com/posts-design/mcp/tree/main/skills/layered-sound) | Music for your film, from a track you hold the rights to | The track’s instruments entering and leaving with the story, with accents, mixed on your machine | The landing and the logo timed to a launch film you like |
+| [remake](https://github.com/posts-design/mcp/tree/main/skills/remake) | A launch film like one you like, for your product | That film remade shot by shot in your brand, rendered on your machine | Any film in the library, not only your one free film |
+| [rebuild](https://github.com/posts-design/mcp/tree/main/skills/rebuild) | Your own video as code | The same video rebuilt frame by frame in HTML, ready to edit its words, colours, size or language and render again | Nothing extra: it works on your own video |
 
 For the best OG images and headers, run those skills in your project, or give your agent the brand’s font files, its
 logo as SVG and a real screenshot of the product.
