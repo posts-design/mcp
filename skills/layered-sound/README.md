@@ -7,7 +7,8 @@ over the track's closing bars. A whoosh, a hit, a riser and a sting mark those m
 with ElevenLabs on your key. A voice-over stays on top: the music dips under it while anyone speaks. The mix is
 mastered for phones (it reports what a mono speaker loses) to −16 LUFS, or the loudness you choose.
 
-It is how we score our own launch films at [posts.design](https://posts.design).
+It is how we score our own launch films at [posts.design](https://posts.design). With posts.design Pro connected,
+your agent can time the landing and the logo to a launch film you like from its library.
 
 ## Example
 
